@@ -1,8 +1,8 @@
 before_script:
   - mkdir -p ~/.ssh
-  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > /root/.ssh/id_rsa
-  - chmod 600 /root/.ssh/id_rsa
-  - ssh-keyscan -H '159.65.212.251' >> /root/.ssh/known_hosts
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+  - chmod 600 ~/.ssh/id_rsa
+  - ssh-keyscan -H '159.65.212.251' >> ~/.ssh/known_hosts
 
 stages:
   - deploy
