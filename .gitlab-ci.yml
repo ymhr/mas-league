@@ -1,16 +1,16 @@
 stages:
- - deploy
+    - deploy
 
 variables:
- APP_NAME: mas-league-app
+    APP_NAME: mas-league-app
 
 deploy:
- image: ilyasemenov/gitlab-ci-git-push
- stage: deploy
- environment:
-  name: production
-  url: https://app.masleague.run/
-  only:
-   - master
-  script:
-   - git-push ssh://dokku@159.65.212.251/mas-league-app
+    image: ilyasemenov/gitlab-ci-git-push
+    stage: deploy
+    environment:
+        name: production
+        url: https://app.masleague.run/
+    only:
+        - master
+    script:
+        - git-push ssh://dokku@159.65.212.251/mas-league-app
