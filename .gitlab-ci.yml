@@ -12,7 +12,7 @@ stages:
 
 deploy:
 #   image: ilyasemenov/gitlab-ci-git-push
-#   stage: deploy
+  stage: deploy
 #   environment:
 #     name: production
 #     url: https://app.masleague.run/
