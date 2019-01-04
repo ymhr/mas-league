@@ -31,5 +31,5 @@ deploy to dokku:
   environment: production
   only: [master]
   script:
-  - cat /root/.ssh/id_rsa
+  - echo "$SSH_PRIVATE_KEY"
   - git-push ssh://dokku@159.65.212.251/mas-league-app
