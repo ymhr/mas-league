@@ -1,22 +1,22 @@
 before_script:
   - mkdir -p ~/.ssh
   - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > /root/.ssh/id_rsa
-  - chmod 600 ~/.ssh/id_rsa
-  - ssh-keyscan -H '159.65.212.251' >> ~/.ssh/known_hosts
+  - chmod 600 /root/.ssh/id_rsa
+  - ssh-keyscan -H '159.65.212.251' >> /root/.ssh/known_hosts
 
 stages:
   - deploy
 
-variables:
-  APP_NAME: mas-league-app
+# variables:
+#   APP_NAME: mas-league-app
 
 deploy:
-  image: ilyasemenov/gitlab-ci-git-push
-  stage: deploy
-  environment:
-    name: production
-    url: https://app.masleague.run/
+#   image: ilyasemenov/gitlab-ci-git-push
+#   stage: deploy
+#   environment:
+#     name: production
+#     url: https://app.masleague.run/
   only:
     - master
   script:
-    - git-push ssh://dokku@159.65.212.251/mas-league-app
+    - git push ssh://dokku@159.65.212.251/mas-league-app master
