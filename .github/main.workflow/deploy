@@ -7,4 +7,3 @@ action "Install" {
   uses = "borales/actions-yarn@master"
   args = "install"
 }
-
