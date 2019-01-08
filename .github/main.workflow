@@ -19,7 +19,7 @@ action "Build" {
 
 action "Deploy" {
   uses = "w9jds/firebase-action@master"
-  args = "deploy --only hosting"
+  args = "deploy --project mas-league --only hosting"
   secrets = ["FIREBASE_TOKEN"]
   env = {
 	  PROJECT_ID = "mas-league"
