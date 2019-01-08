@@ -1,9 +1,11 @@
-import React, { Component, useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import 'firebase/init';
 import firebase from 'firebase/app';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import Header from 'components/layout/Header';
+import useFirebaseAuth from 'hooks/useFirebaseAuth';
+import { auth } from 'store/actions';
 
 const uiConfig = {
 	signInFlow: 'popup',
@@ -18,7 +20,15 @@ const uiConfig = {
 	}
 };
 
-function App({ user }) {
+function App({ user, dispatch }) {
+	const firebaseUser = useFirebaseAuth();
+
+	if (!user && firebaseUser) {
+		dispatch(auth.login(firebaseUser));
+	} else {
+		dispatch(auth.loading);
+	}
+
 	return (
 		<>
 			{!user && (
