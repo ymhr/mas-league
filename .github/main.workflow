@@ -3,18 +3,24 @@ workflow "Deploy to Firebase" {
   resolves = ["Deploy"]
 }
 
+action "Is master" {
+  uses = "actions/bin/filter@b2bea0749eed6beb495a8fa194c071847af60ea1"
+  args = "branch master"
+}
+
 action "Install" {
   uses = "borales/actions-yarn@master"
   args = "install"
+  needs = ["Is master"]
 }
 
 action "Build" {
- uses = "borales/actions-yarn@master"
- args = "build"
- needs = ["Install"]
- env = {
-	 NODE_PATH = "src"
- }
+  uses = "borales/actions-yarn@master"
+  args = "build"
+  needs = ["Install"]
+  env = {
+    NODE_PATH = "src"
+  }
 }
 
 action "Deploy" {
@@ -22,7 +28,7 @@ action "Deploy" {
   args = "deploy --project mas-league --only hosting"
   secrets = ["FIREBASE_TOKEN"]
   env = {
-	  PROJECT_ID = "mas-league"
+    PROJECT_ID = "mas-league"
   }
   needs = ["Install", "Build"]
 }
