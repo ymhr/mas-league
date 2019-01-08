@@ -11,11 +11,12 @@ action "Install" {
 action "Build" {
  uses = "borales/actions-yarn@master"
  args = "build"
+ needs = ["Install"]
 }
 
 action "Deploy" {
   uses = "webscopeio/firebase-deploy-github-action@master"
   args = "--only hosting"
   secrets = ["FIREBASE_AUTH_TOKEN"]
-  needs = ["Build"]
+  needs = ["Install", "Build"]
 }
