@@ -12,6 +12,9 @@ action "Build" {
  uses = "borales/actions-yarn@master"
  args = "build"
  needs = ["Install"]
+ env = {
+	 NODE_PATH = "src"
+ }
 }
 
 action "Deploy" {
