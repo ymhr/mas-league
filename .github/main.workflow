@@ -18,8 +18,11 @@ action "Build" {
 }
 
 action "Deploy" {
-  uses = "webscopeio/firebase-deploy-github-action@master"
-  args = "--only hosting"
-  secrets = ["FIREBASE_AUTH_TOKEN"]
+  uses = "w9jds/firebase-action@master"
+  args = "deploy --only hosting"
+  secrets = ["FIREBASE_TOKEN"]
+  env = {
+	  PROJECT_ID = "mas-league"
+  }
   needs = ["Install", "Build"]
 }
