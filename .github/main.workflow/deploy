@@ -3,14 +3,8 @@ workflow "Deploy to Firebase" {
   resolves = ["Deploy"]
 }
 
-action "Build" {
+action "Install" {
   uses = "borales/actions-yarn@master"
   args = "install"
 }
 
-action "Deploy" {
-  uses = "webscopeio/firebase-deploy-github-action@master"
-  args = "--only hosting"
-  secrets = ["FIREBASE_AUTH_TOKEN"]
-  needs = ["Build"]
-}
