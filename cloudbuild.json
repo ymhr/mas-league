@@ -10,7 +10,7 @@
     "build"
    ],
    "env": [
-    "NODE_PATHsrc"
+    "NODE_PATH=src"
    ]
   },
   {
