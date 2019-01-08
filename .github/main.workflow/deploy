@@ -1,9 +1,0 @@
-workflow "Deploy to Firebase" {
-  on = "push"
-  resolves = ["Deploy"]
-}
-
-action "Install" {
-  uses = "borales/actions-yarn@master"
-  args = "install"
-}
