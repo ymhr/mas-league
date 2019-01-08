@@ -8,6 +8,9 @@
    "name": "gcr.io/cloud-builders/yarn",
    "args": [
     "build"
+   ],
+   "env": [
+    "NODE_PATHsrc"
    ]
   },
   {
