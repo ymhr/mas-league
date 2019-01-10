@@ -11,3 +11,10 @@ export function login(user) {
 		dispatch({ type: actions.LOADING, payload: false });
 	};
 }
+
+export function logout() {
+	return (dispatch) => {
+		localStorage.removeItem('user');
+		dispatch({ type: actions.LOGOUT });
+	};
+}
