@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import 'firebase/init';
-import firebase from 'firebase/app';
 import Header from 'components/layout/Header';
 import useFirebaseAuth from 'hooks/useFirebaseAuth';
 import { auth } from 'store/actions';
@@ -10,18 +9,20 @@ import ProtectedRoute from 'components/ProtectedRoute';
 import Home from 'routes/Home';
 import Protect from 'routes/Protect';
 import Login from 'routes/Login';
+import store from 'store';
+
+function setUserFromFirebase(user) {
+	if (user) {
+		store.dispatch(auth.login(user));
+	} else {
+		store.dispatch(auth.logout());
+	}
+}
 
 function App({ user, dispatch }) {
-	const firebaseUser = useFirebaseAuth();
-
-	if (!user && firebaseUser) {
-		dispatch(auth.login(firebaseUser));
-	} else {
-		dispatch(auth.loading);
-	}
+	useFirebaseAuth(setUserFromFirebase);
 
 	function isLoggedIn() {
-		console.log('called');
 		return !!user;
 	}
 
@@ -31,24 +32,12 @@ function App({ user, dispatch }) {
 				<div className="app">
 					<Header />
 					<Route path="/" exact component={Home} />
-					<Route
-						// isAllowed={isLoggedIn}
+					<ProtectedRoute
+						isAllowed={isLoggedIn}
 						path="/protect/"
 						component={Protect}
 					/>
 					<Route path="/login" component={Login} />
-					{/* {!user && (
-				<StyledFirebaseAuth
-					uiConfig={uiConfig}
-					firebaseAuth={firebase.auth()}
-				/>
-			)}
-
-			{user && (
-				<div className="App">
-					<Header />
-				</div>
-			)} */}
 				</div>
 			</Switch>
 		</Router>

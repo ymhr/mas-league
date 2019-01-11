@@ -4,7 +4,8 @@ const currentUser = JSON.parse(localStorage.getItem('user'));
 
 const defaultState = {
 	user: currentUser || null,
-	loading: true
+	loading: true,
+	loggedOut: false
 };
 
 export const actions = {
@@ -15,13 +16,13 @@ export const actions = {
 
 export default function auth(state = defaultState, action) {
 	return produce(state, (draft) => {
-		console.log(action);
 		switch (action.type) {
 			case actions.LOGIN:
 				draft.user = action.payload;
 				break;
 			case actions.LOGOUT:
 				draft.user = null;
+				draft.loggedOut = true;
 				break;
 			case actions.LOADING:
 				draft.loading = action.payload || false;
