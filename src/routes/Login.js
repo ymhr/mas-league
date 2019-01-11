@@ -1,6 +1,8 @@
 import React from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase/app';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 const uiConfig = {
 	signInFlow: 'popup',
@@ -15,7 +17,8 @@ const uiConfig = {
 	}
 };
 
-export default function Login() {
+function Login({ history, loggedIn }) {
+	if (loggedIn) return <Redirect to="/" />;
 	return (
 		<StyledFirebaseAuth
 			uiConfig={uiConfig}
@@ -23,3 +26,10 @@ export default function Login() {
 		/>
 	);
 }
+
+function mapStateToProps(state) {
+	return {
+		loggedIn: !!state.auth.user
+	};
+}
+export default connect(mapStateToProps)(Login);

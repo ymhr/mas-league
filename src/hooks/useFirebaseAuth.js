@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
 import firebase from 'firebase/app';
 
-export default function useFirebaseAuth() {
-	const [user, setUser] = useState(null);
+export default function useFirebaseAuth(callback = () => {}) {
 	useEffect(() => {
 		//This returns the unsubscribe function
 		return firebase.auth().onAuthStateChanged((user) => {
-			localStorage.setItem('user', JSON.stringify(user));
-			setUser(user);
+			if (user) {
+				localStorage.setItem('user', JSON.stringify(user));
+				callback(user);
+			}
 		});
 	}, []);
-
-	return user;
 }
