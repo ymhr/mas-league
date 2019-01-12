@@ -1,13 +1,23 @@
-import React from 'react';
-import { Redirect, Route, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
+import { Redirect, Route } from 'react-router-dom';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import firebase from 'firebase/app';
 
-function ProtectedRoute({ component: Component, authed, ...props }) {
+function ProtectedRoute({ component: Component, isAllowed, ...props }) {
+	const [showLoading, setShowLoading] = useState(false);
+	const { initialising, user } = useAuthState(firebase.auth());
+
+	setTimeout(() => setShowLoading(true), 1000);
+
+	if (initialising) {
+		return showLoading && <div>Loading...</div>;
+	}
+
 	return (
 		<Route
 			{...props}
 			render={(props) => {
-				return authed ? (
+				return !!user ? (
 					<Component {...props} />
 				) : (
 					<Redirect to="/login" />
@@ -17,11 +27,4 @@ function ProtectedRoute({ component: Component, authed, ...props }) {
 	);
 }
 
-function mapStateToProps(state) {
-	return {
-		authed: !!state.auth.user,
-		user: state.auth.user
-	};
-}
-
-export default withRouter(connect(mapStateToProps)(ProtectedRoute));
+export default ProtectedRoute;
