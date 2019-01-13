@@ -3,6 +3,18 @@ import firebase from 'firebase/app';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import Loading from 'components/Loading';
 import Dog from 'components/dogs/Dog';
+import styled from 'styled-components';
+
+const ListContainer = styled.ul`
+	list-style: none;
+	margin: 0;
+	padding: 0;
+`;
+
+const ListItem = styled.li`
+	padding: 0;
+	margin: 0;
+`;
 
 export default function List() {
 	const db = firebase.firestore();
@@ -14,14 +26,14 @@ export default function List() {
 	if (loading) return <Loading />;
 	if (error) return <h1>Something went wrong</h1>;
 	return (
-		<ul>
-			{value.docs.map((doc) => {
+		<ListContainer>
+			{value.docs.map(doc => {
 				return (
-					<li key={doc.id}>
+					<ListItem key={doc.id}>
 						<Dog dog={doc} />
-					</li>
+					</ListItem>
 				);
 			})}
-		</ul>
+		</ListContainer>
 	);
 }

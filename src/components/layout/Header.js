@@ -2,19 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import firebase from 'firebase/app';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 
 const HeaderBar = styled.header`
 	width: 100%;
-	height: 200px;
 	background-color: #ccc;
-`;
-
-const TitleWrapper = styled.div`
-	display: flex;
-	justify-content: left;
-	align-items: center;
-	height: 100%;
-	padding-left: 20px;
+	padding: 20px;
 `;
 
 function Header({ dispatch }) {
@@ -24,12 +17,22 @@ function Header({ dispatch }) {
 
 	return (
 		<HeaderBar>
-			<TitleWrapper>
-				<h1>MAS Agility League</h1>
-				<Link to="/">Home</Link>
-				<Link to="/dogs">Your dogs</Link>
-				<button onClick={logout}>Logout</button>
-			</TitleWrapper>
+			<Grid fluid>
+				<Row>
+					<Col xs={12}>
+						<h1>MAS Agility League</h1>
+					</Col>
+				</Row>
+				<Row>
+					<Col xs={10}>
+						<Link to="/">Home</Link>
+						<Link to="/dogs">Your dogs</Link>
+					</Col>
+					<Col xs={2}>
+						<button onClick={logout}>Logout</button>
+					</Col>
+				</Row>
+			</Grid>
 		</HeaderBar>
 	);
 }
