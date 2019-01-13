@@ -6,7 +6,8 @@ import ProtectedRoute from 'components/ProtectedRoute';
 import Home from 'routes/Home';
 import YourDogs from 'routes/YourDogs';
 import Login from 'routes/Login';
-function App({ dispatch }) {
+
+function App() {
 	return (
 		<Router>
 			<div className="app">

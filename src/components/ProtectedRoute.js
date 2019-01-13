@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import firebase from 'firebase/app';
+import Loading from 'components/Loading';
 
 function ProtectedRoute({ component: Component, isAllowed, ...props }) {
 	const [showLoading, setShowLoading] = useState(false);
@@ -16,7 +17,7 @@ function ProtectedRoute({ component: Component, isAllowed, ...props }) {
 	}, []);
 
 	if (initialising) {
-		return showLoading && <div>Loading...</div>;
+		return showLoading && <Loading />;
 	}
 
 	return (
