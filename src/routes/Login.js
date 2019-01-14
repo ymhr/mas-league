@@ -10,7 +10,7 @@ const uiConfig = {
 		firebase.auth.GoogleAuthProvider.PROVIDER_ID
 	],
 	callbacks: {
-		signInSuccessWithAuthResult: (data) => {
+		signInSuccessWithAuthResult: data => {
 			//
 		}
 	}
@@ -26,9 +26,4 @@ function Login({ history, loggedIn }) {
 	);
 }
 
-function mapStateToProps(state) {
-	return {
-		loggedIn: !!state.auth.user
-	};
-}
-export default connect(mapStateToProps)(Login);
+export default Login;
