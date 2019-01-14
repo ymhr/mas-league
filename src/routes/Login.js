@@ -2,7 +2,6 @@ import React from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase/app';
 import { Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
 
 const uiConfig = {
 	signInFlow: 'popup',
