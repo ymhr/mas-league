@@ -4476,9 +4476,9 @@ immer@1.7.2:
   version "1.7.2"
   resolved "https://registry.yarnpkg.com/immer/-/immer-1.7.2.tgz#a51e9723c50b27e132f6566facbec1c85fc69547"
 
-immer@^1.10.4:
-  version "1.10.4"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-1.10.4.tgz#404c6680981b3e84ecfe556e1ba43a9fbfe708f4"
+immer@^1.10.5:
+  version "1.10.5"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-1.10.5.tgz#a4fd1d12587a166da769763f881c0039fa61c557"
 
 immutable@^3.7.4:
   version "3.8.2"
