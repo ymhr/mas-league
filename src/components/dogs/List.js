@@ -27,7 +27,7 @@ export default function List() {
 	if (error) return <h1>Something went wrong</h1>;
 	return (
 		<ListContainer>
-			{value.docs.map(doc => {
+			{value.docs.map((doc) => {
 				return (
 					<ListItem key={doc.id}>
 						<Dog dog={doc} />
