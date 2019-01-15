@@ -2,7 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import firebase from 'firebase/app';
-import { Grid, Row, Col } from 'react-flexbox-grid';
+import LoginButton from 'components/layout/LoginButton';
+import { Row, Col, Button } from 'antd';
 
 const HeaderBar = styled.header`
 	width: 100%;
@@ -11,28 +12,22 @@ const HeaderBar = styled.header`
 `;
 
 function Header({ dispatch }) {
-	function logout() {
-		firebase.auth().signOut();
-	}
-
 	return (
 		<HeaderBar>
-			<Grid fluid>
-				<Row>
-					<Col xs={12}>
-						<h1>MAS Agility League</h1>
-					</Col>
-				</Row>
-				<Row>
-					<Col xs={10}>
-						<Link to="/">Home</Link>
-						<Link to="/dogs">Your dogs</Link>
-					</Col>
-					<Col xs={2}>
-						<button onClick={logout}>Logout</button>
-					</Col>
-				</Row>
-			</Grid>
+			<Row>
+				<Col xs={24}>
+					<h1>MAS Agility League</h1>
+				</Col>
+			</Row>
+			<Row>
+				<Col xs={22}>
+					<Link to="/">Home</Link>
+					<Link to="/dogs">Your dogs</Link>
+				</Col>
+				<Col xs={2}>
+					<LoginButton />
+				</Col>
+			</Row>
 		</HeaderBar>
 	);
 }
