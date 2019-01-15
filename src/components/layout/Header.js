@@ -1,31 +1,48 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import firebase from 'firebase/app';
 import LoginButton from 'components/layout/LoginButton';
-import { Row, Col, Button } from 'antd';
+import { Row, Col, Menu, Affix } from 'antd';
+import useRouter from 'use-react-router';
 
 const HeaderBar = styled.header`
 	width: 100%;
-	background-color: #ccc;
-	padding: 20px;
+	background-color: #eee;
+`;
+
+const H1 = styled.h1`
+	padding: 0 20px;
+	margin: 20px 0;
 `;
 
 function Header({ dispatch }) {
+	const { location } = useRouter();
+
 	return (
 		<HeaderBar>
 			<Row>
 				<Col xs={24}>
-					<h1>MAS Agility League</h1>
+					<H1>MAS Agility League</H1>
 				</Col>
 			</Row>
 			<Row>
-				<Col xs={22}>
-					<Link to="/">Home</Link>
-					<Link to="/dogs">Your dogs</Link>
-				</Col>
-				<Col xs={2}>
-					<LoginButton />
+				<Col xs={24}>
+					<Affix offsetTop={0}>
+						<Menu
+							mode="horizontal"
+							selectedKeys={[location.pathname]}
+						>
+							<Menu.Item key="/">
+								<Link to="/">Home</Link>
+							</Menu.Item>
+							<Menu.Item key="/dogs">
+								<Link to="/dogs">Your dogs</Link>
+							</Menu.Item>
+							<Menu.Item key="/login">
+								<LoginButton />
+							</Menu.Item>
+						</Menu>
+					</Affix>
 				</Col>
 			</Row>
 		</HeaderBar>
