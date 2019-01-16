@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import LoginButton from 'components/layout/LoginButton';
 import { Row, Col, Menu, Affix } from 'antd';
 import useRouter from 'use-react-router';
+import AdminButton from 'components/layout/AdminButton';
 
 const HeaderBar = styled.header`
 	width: 100%;
@@ -40,6 +41,9 @@ function Header({ dispatch }) {
 							</Menu.Item>
 							<Menu.Item key="/login">
 								<LoginButton />
+							</Menu.Item>
+							<Menu.Item key="/admin">
+								<AdminButton />
 							</Menu.Item>
 						</Menu>
 					</Affix>

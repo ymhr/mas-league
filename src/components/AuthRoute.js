@@ -1,23 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import firebase from 'firebase/app';
 import Loading from 'components/Loading';
 
-function ProtectedRoute({ component: Component, isAllowed, ...props }) {
-	const [showLoading, setShowLoading] = useState(false);
+function AuthRoute({ component: Component, isAllowed, ...props }) {
 	const { initialising, user } = useAuthState(firebase.auth());
 
-	useEffect(() => {
-		setTimeout(() => {
-			if (!user) {
-				setShowLoading(true);
-			}
-		}, 1000);
-	}, []);
-
 	if (initialising) {
-		return showLoading && <Loading />;
+		return <Loading />;
 	}
 
 	return (
@@ -34,4 +25,4 @@ function ProtectedRoute({ component: Component, isAllowed, ...props }) {
 	);
 }
 
-export default ProtectedRoute;
+export default AuthRoute;
