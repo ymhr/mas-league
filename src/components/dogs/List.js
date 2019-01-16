@@ -20,7 +20,8 @@ export default function List() {
 	const db = firebase.firestore();
 	const dogsRef = db
 		.collection('dogs')
-		.where('uid', '==', firebase.auth().currentUser.uid);
+		.where('uid', '==', firebase.auth().currentUser.uid)
+		.order('name', 'desc');
 	const { error, loading, value } = useCollection(dogsRef);
 
 	const newDoc = db.collection('dogs').doc();
