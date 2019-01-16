@@ -23,6 +23,8 @@ export default function List() {
 		.where('uid', '==', firebase.auth().currentUser.uid);
 	const { error, loading, value } = useCollection(dogsRef);
 
+	const newDoc = db.collection('dogs').doc();
+
 	if (loading) return <Loading />;
 	if (error) return <h1>Something went wrong</h1>;
 	return (
@@ -34,6 +36,9 @@ export default function List() {
 					</ListItem>
 				);
 			})}
+			<ListItem key={newDoc.id}>
+				<Dog dog={newDoc} />
+			</ListItem>
 		</ListContainer>
 	);
 }

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import posed, { PoseGroup } from 'react-pose';
 import styled from 'styled-components';
-// import { Form, Text } from 'informed';
-import { Button, Form, Input, InputNumber } from 'antd';
+import { Button, Form, Input, InputNumber, Icon } from 'antd';
 import firebase from 'firebase/app';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import Loading from 'components/Loading';
 
 const BoxPosed = posed.div({
 	open: {
@@ -108,15 +109,24 @@ const Overlay = styled(OverlayPosed)`
 	}
 `;
 
-const Label = styled.label`
-	display: block;
-`;
-
 function Dog({ dog, form }) {
 	const { getFieldDecorator } = form;
 	const db = firebase.firestore();
 	const [isOpen, setIsOpen] = useState(false);
-	const data = dog.data();
+	const [isNew, setIsNew] = useState(false);
+	const { initialising, user } = useAuthState(firebase.auth());
+
+	if (initialising) return <Loading />;
+
+	let data = {};
+	if (!isNew) {
+		try {
+			data = dog.data();
+		} catch (e) {
+			setIsNew(true);
+		}
+	}
+
 	const dogDoc = db.collection('dogs').doc(dog.id);
 
 	function close() {
@@ -131,9 +141,14 @@ function Dog({ dog, form }) {
 	function submit(e) {
 		e.preventDefault();
 		form.validateFields((err, values) => {
-			console.log(err, values);
+			if (!err) {
+				if (isNew) {
+					dogDoc.set(values);
+				} else {
+					dogDoc.update(values);
+				}
+			}
 		});
-		// dogDoc.update(data);
 	}
 
 	return (
@@ -151,7 +166,16 @@ function Dog({ dog, form }) {
 				{isOpen && (
 					<Close onClick={close} shape="circle" icon="close" />
 				)}
-				<Name pose={isOpen ? 'large' : 'small'}>{data.name}</Name>
+				<Name pose={isOpen ? 'large' : 'small'}>
+					{isNew ? (
+						<>
+							<Icon type="plus" />
+							<span>Add a new dog</span>
+						</>
+					) : (
+						data.name
+					)}
+				</Name>
 				<PoseGroup>
 					{isOpen && (
 						<AppearingForm key="form">
@@ -169,13 +193,20 @@ function Dog({ dog, form }) {
 									})(<Input />)}
 								</Form.Item>
 								<Form.Item label="Grade">
-									<InputNumber
-										name="grade"
-										defaultValue={parseInt(data.grade, 10)}
-										min={1}
-										max={7}
-									/>
+									{getFieldDecorator('grade', {
+										rules: [
+											{
+												required: true,
+												message:
+													'You must enter the name of your dog.'
+											}
+										],
+										initialValue: data.grade
+									})(<InputNumber min={1} max={7} />)}
 								</Form.Item>
+								{getFieldDecorator('uid', {
+									initialValue: user.uid
+								})(<Input type="hidden" />)}
 								<Button htmlType="submit">Submit</Button>
 							</Form>
 						</AppearingForm>
