@@ -21,7 +21,7 @@ export default function List() {
 	const dogsRef = db
 		.collection('dogs')
 		.where('uid', '==', firebase.auth().currentUser.uid)
-		.order('name', 'desc');
+		.orderBy('name', 'desc');
 	const { error, loading, value } = useCollection(dogsRef);
 
 	const newDoc = db.collection('dogs').doc();
