@@ -28,6 +28,7 @@ export default function List() {
 
 	if (loading) return <Loading />;
 	if (error) return <h1>Something went wrong</h1>;
+
 	return (
 		<ListContainer>
 			{value.docs.map((doc) => {
