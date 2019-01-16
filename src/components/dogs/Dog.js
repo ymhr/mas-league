@@ -151,6 +151,11 @@ function Dog({ dog, form }) {
 		});
 	}
 
+	function deleteDog(e) {
+		e.preventDefault();
+		dogDoc.delete();
+	}
+
 	return (
 		<>
 			<Overlay
@@ -208,6 +213,11 @@ function Dog({ dog, form }) {
 									initialValue: user.uid
 								})(<Input type="hidden" />)}
 								<Button htmlType="submit">Submit</Button>
+								{!isNew && (
+									<Button type="danger" onClick={deleteDog}>
+										Delete
+									</Button>
+								)}
 							</Form>
 						</AppearingForm>
 					)}
