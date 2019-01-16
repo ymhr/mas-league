@@ -51,10 +51,7 @@ const AppearingForm = posed.div({
 	exit: {
 		opacity: 0,
 		height: '1px',
-		transform: 'translateY(-20px)',
-		transition: {
-			duration: 0
-		}
+		transform: 'translateY(-20px)'
 	}
 });
 
@@ -68,6 +65,8 @@ const OverlayPosed = posed.div({
 });
 
 const Box = styled(BoxPosed)`
+	overflow: hidden;
+
 	&.closed {
 		z-index: 0;
 		cursor: pointer;
