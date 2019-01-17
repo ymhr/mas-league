@@ -28,7 +28,7 @@ export default function useIsAdmin() {
 	const response = { isAdmin, loading: isLoading, error: hasError };
 
 	//Exist early if we're loading, have an error, or have already determined that the user is an admin
-	if (error || loading || initialising || isAdmin) return response;
+	if (error || loading || initialising || isAdmin || !user) return response;
 
 	//Is the user an admin?
 	const { adminUids } = value.data();
