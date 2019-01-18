@@ -5,6 +5,7 @@ import { Button, Form, Input, InputNumber, Icon } from 'antd';
 import firebase from 'firebase/app';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Loading from 'components/Loading';
+import { useDoc } from 'hooks/firebase';
 
 const BoxPosed = posed.div({
 	open: {
@@ -110,7 +111,6 @@ const Overlay = styled(OverlayPosed)`
 
 function Dog({ dog, form }) {
 	const { getFieldDecorator } = form;
-	const db = firebase.firestore();
 	const [isOpen, setIsOpen] = useState(false);
 	const [isNew, setIsNew] = useState(false);
 	const { initialising, user } = useAuthState(firebase.auth());
@@ -126,7 +126,7 @@ function Dog({ dog, form }) {
 		}
 	}
 
-	const dogDoc = db.collection('dogs').doc(dog.id);
+	const { doc: dogDoc } = useDoc('dogs', dog.id);
 
 	function close() {
 		setIsOpen(false);
@@ -146,6 +146,7 @@ function Dog({ dog, form }) {
 				} else {
 					dogDoc.update(values);
 				}
+				close();
 			}
 		});
 	}

@@ -3,9 +3,11 @@ import { Redirect, Route } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import firebase from 'firebase/app';
 import Loading from 'components/Loading';
+import { useHasProfile } from 'hooks/firebase';
 
-function AuthRoute({ component: Component, isAllowed, ...props }) {
+function AuthRoute({ component: Component, ...props }) {
 	const { initialising, user } = useAuthState(firebase.auth());
+	const hasProfile = useHasProfile();
 
 	if (initialising) {
 		return <Loading />;
@@ -15,11 +17,12 @@ function AuthRoute({ component: Component, isAllowed, ...props }) {
 		<Route
 			{...props}
 			render={(props) => {
-				return !!user ? (
-					<Component {...props} />
-				) : (
-					<Redirect to="/login" />
-				);
+				if (!user) return <Redirect to="/login" />;
+				if (!hasProfile && props.match.path !== '/onboard') {
+					return <Redirect to="/onboard" />;
+				}
+
+				return <Component {...props} />;
 			}}
 		/>
 	);

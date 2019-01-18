@@ -1,15 +1,11 @@
 import React from 'react';
-import { useCollection } from 'react-firebase-hooks/firestore';
 import firebase from 'firebase/app';
 import League from 'components/leagues/League';
 import Loading from 'components/Loading';
+import { useQuery } from 'hooks/firebase';
 
 export default function Admin() {
-	const db = firebase.firestore();
-
-	const query = db.collection('leagues').where('test', '==', '');
-
-	const { loading, error, value } = useCollection(query);
+	const { loading, error, value } = useQuery('leagues', 'test', '==', '');
 
 	if (loading || error || !value) return <Loading />;
 

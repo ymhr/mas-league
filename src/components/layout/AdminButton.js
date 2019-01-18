@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from 'antd';
 import useIsAdmin from 'hooks/useIsAdmin';
-import firebase from 'firebase/app';
 import useReactRouter from 'use-react-router';
 
 export default function LoginButton() {

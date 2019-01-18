@@ -1,7 +1,5 @@
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import firebase from 'firebase/app';
 import Loading from 'components/Loading';
 import useIsAdmin from 'hooks/useIsAdmin';
 

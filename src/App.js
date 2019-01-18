@@ -8,6 +8,7 @@ import Admin from 'routes/Admin';
 import Home from 'routes/Home';
 import YourDogs from 'routes/YourDogs';
 import Login from 'routes/Login';
+import Onboard from 'routes/Onboard';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -25,6 +26,7 @@ function App() {
 						<AuthRoute path="/dogs" component={YourDogs} />
 						<Route path="/login" component={Login} />
 						<AdminRoute path="/admin" component={Admin} />
+						<AuthRoute path="/onboard" component={Onboard} />
 					</Switch>
 				</Container>
 			</div>

@@ -1,7 +1,7 @@
-import { useCollection } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import firebase from 'firebase/app';
 import { useState } from 'react';
+import { useDoc } from 'hooks/firebase';
 
 export default function useIsAdmin() {
 	const { initialising, user } = useAuthState(firebase.auth());
@@ -9,10 +9,7 @@ export default function useIsAdmin() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [hasError, setHasError] = useState(undefined);
 
-	const db = firebase.firestore();
-	const query = db.collection('meta').doc('admin');
-
-	const { error, loading, value } = useCollection(query);
+	const { error, loading, value } = useDoc('meta', 'admin');
 
 	//If we're done loading, and have not yet marked it as done, set it
 	if (!loading && !initialising && isLoading === true) {

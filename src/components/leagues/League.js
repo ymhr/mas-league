@@ -1,13 +1,9 @@
 import React from 'react';
-import { useCollection } from 'react-firebase-hooks/firestore';
-import firebase from 'firebase/app';
+import { useDoc } from 'hooks/firebase';
 import Loading from 'components/Loading';
 
 function Dog({ id }) {
-	const db = firebase.firestore();
-	const { loading, error, value } = useCollection(
-		db.collection('dogs').doc(id)
-	);
+	const { loading, error, value } = useDoc('dogs', id);
 
 	if (loading || error || !value) return <Loading />;
 
