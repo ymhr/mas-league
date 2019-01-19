@@ -13,15 +13,6 @@ export default function AuthRoute({ component: Component, ...props }) {
 		hasRequiredProfileData
 	} = useProfile();
 
-	// function hasCompleteProfile() {
-	// 	return (
-	// 		profile &&
-	// 		profile.data &&
-	// 		profile.data() &&
-	// 		Object.keys(profile.data()).length >= 2
-	// 	);
-	// }
-
 	return (
 		<Route
 			{...props}
