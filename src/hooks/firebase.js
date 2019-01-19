@@ -1,13 +1,18 @@
 import { useRef } from 'react';
-import { useCollection } from 'react-firebase-hooks/firestore';
+import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import firebase from 'firebase/app';
 
 export function useDoc(collection, id) {
 	const db = firebase.firestore();
-	if (!id) return { loading: true };
-	const query = db.collection(collection).doc(id);
-	return { ...useCollection(query), doc: query };
+	const res = { loading: true, error: null, value: null };
+	try {
+		return useDocument(db.collection(collection).doc(id));
+	} catch (e) {
+		console.log('whoops doc error');
+		res.loading = false;
+		return res;
+	}
 }
 
 export function useQuery(collection, ...rest) {
@@ -26,8 +31,8 @@ export function useProfile() {
 
 		//Make sure that these required fields exist
 		return ['firstName', 'lastName']
-			.map((fieldName) => !!data[fieldName])
-			.every((f) => f);
+			.map(fieldName => !!data[fieldName])
+			.every(f => f);
 	}
 
 	const response = useRef({

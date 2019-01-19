@@ -1,12 +1,6 @@
 import React from 'react';
-import League from 'components/leagues/League';
-import Loading from 'components/Loading';
-import { useQuery } from 'hooks/firebase';
+import List from 'components/leagues/List';
 
 export default function Admin() {
-	const { loading, error, value } = useQuery('leagues', 'test', '==', '');
-
-	if (loading || error || !value) return <Loading />;
-
-	return value.docs.map((doc) => <League key={doc.id} doc={doc} />);
+	return <List />;
 }
