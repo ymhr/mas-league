@@ -7,7 +7,7 @@ function ProfileForm({ form }) {
 	const { getFieldDecorator, validateFields } = form;
 	const { loading, error, doc, value } = useProfile();
 
-	if (loading || error) return <Loading />;
+	if (loading || error || value === null) return <Loading />;
 
 	function onSubmit(e) {
 		e.preventDefault();

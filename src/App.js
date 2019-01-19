@@ -1,5 +1,4 @@
 import React from 'react';
-import 'firebase/init';
 import Header from 'components/layout/Header';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import AuthRoute from 'components/AuthRoute';

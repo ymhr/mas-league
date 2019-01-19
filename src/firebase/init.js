@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
+import { initializeFirebase } from 'react-firestore-connect';
 
 var config = {
 	apiKey: 'AIzaSyAJt8h2MCL8cbM2PNp49kUrC_lmG_uqlyg',
@@ -12,6 +13,8 @@ var config = {
 };
 
 firebase.initializeApp(config);
+
+initializeFirebase(firebase);
 
 firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 

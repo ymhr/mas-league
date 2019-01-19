@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import ProfileForm from 'components/onboard/ProfileForm';
-import { useHasProfile } from 'hooks/firebase';
+import { useProfile } from 'hooks/firebase';
+import Loading from 'components/Loading';
 
 function Onboard({ getFieldDecorator }) {
-	// const hasProfile = useHasProfile();
+	const data = useRef(null);
+
+	const { value, loading, error } = useProfile();
+
+	if (!data || loading || error || !value) return <Loading />;
+
+	data.current = value.data();
+
+	const hasRequiredData = ['firstName', 'lastName']
+		.map((fieldName) => !!data.current[fieldName])
+		.every((f) => f);
 
 	return (
 		<>
@@ -13,7 +24,7 @@ function Onboard({ getFieldDecorator }) {
 				Don't worry, we just need this information for administrative
 				purposes.
 			</p>
-			<ProfileForm />
+			{hasRequiredData ? <h1>All good!</h1> : <ProfileForm />}
 		</>
 	);
 }

@@ -3,15 +3,22 @@ import { Redirect, Route } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import firebase from 'firebase/app';
 import Loading from 'components/Loading';
-import { useHasProfile } from 'hooks/firebase';
+import { useProfile } from 'hooks/firebase';
 
-function AuthRoute({ component: Component, ...props }) {
+export default function AuthRoute({ component: Component, ...props }) {
 	const { initialising, user } = useAuthState(firebase.auth());
-	const hasProfile = useHasProfile();
+	const {
+		loading: profileLoading,
+		value: profile,
+		error: profileError
+	} = useProfile();
 
-	if (initialising) {
+	if (initialising || profileLoading) {
 		return <Loading />;
 	}
+
+	const hasProfile =
+		profile && profile.data && Object.keys(profile.data()).length >= 2;
 
 	return (
 		<Route
@@ -27,5 +34,3 @@ function AuthRoute({ component: Component, ...props }) {
 		/>
 	);
 }
-
-export default AuthRoute;
