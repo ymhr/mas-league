@@ -10,12 +10,16 @@ export default function AuthRoute({ component: Component, ...props }) {
 	const {
 		loading: profileLoading,
 		value: profile,
-		error: profileError
+		error: profileError,
+		doc
 	} = useProfile();
 
 	function hasCompleteProfile() {
 		return (
-			profile && profile.data && Object.keys(profile.data()).length >= 2
+			profile &&
+			profile.data &&
+			profile.data() &&
+			Object.keys(profile.data()).length >= 2
 		);
 	}
 
@@ -29,7 +33,7 @@ export default function AuthRoute({ component: Component, ...props }) {
 				// If the profile is done loading, but either they have none, or do not have the required info, send them to the onboarding page
 				if (
 					!profileLoading &&
-					(!profile || !hasCompleteProfile()) &&
+					!hasCompleteProfile() &&
 					props.match.path !== '/onboard'
 				) {
 					return <Redirect to="/onboard" />;

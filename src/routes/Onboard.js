@@ -8,17 +8,17 @@ import DogForm from 'components/onboard/DogForm';
 function Onboard({ getFieldDecorator, history }) {
 	const data = useRef(null);
 
-	const { value, loading, error } = useProfile();
+	const { value, loading, error, hasRequiredProfileData } = useProfile();
 
 	if (!data || loading || error || !value) return <Loading />;
 
-	data.current = value.data();
+	data.current = value.data() || {};
 
-	const hasRequiredData = ['firstName', 'lastName']
-		.map((fieldName) => !!data.current[fieldName])
-		.every((f) => f);
-
-	const currentStep = hasRequiredData ? 1 : 0;
+	// const hasRequiredData = ['firstName', 'lastName']
+	// 	.map((fieldName) => !!data.current[fieldName])
+	// 	.every((f) => f);
+	console.log('has', hasRequiredProfileData());
+	const currentStep = hasRequiredProfileData() ? 1 : 0;
 
 	function redirectToHome() {
 		history.push('/');
@@ -42,7 +42,7 @@ function Onboard({ getFieldDecorator, history }) {
 					description="Add your dogs to your profile!"
 				/>
 			</Steps>
-			{hasRequiredData ? (
+			{hasRequiredProfileData() ? (
 				<>
 					<DogForm />
 					<Button type="primary" block onClick={redirectToHome}>

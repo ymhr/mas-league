@@ -17,11 +17,25 @@ export function useQuery(collection, ...rest) {
 }
 
 export function useProfile() {
+	function hasRequiredProfileData(value) {
+		//Make sure that we can get the data out of the value
+		const data = value && value.data && value.data();
+
+		//If, for whatever reason, we cannot get the data, then return false\
+		if (!data) return false;
+
+		//Make sure that these required fields exist
+		return ['firstName', 'lastName']
+			.map((fieldName) => !!data[fieldName])
+			.every((f) => f);
+	}
+
 	const response = useRef({
 		loading: false,
 		doc: null,
 		value: null,
-		error: null
+		error: null,
+		hasRequiredProfileDat: () => false
 	});
 
 	const { initialising, user } = useAuthState(firebase.auth());
@@ -36,6 +50,11 @@ export function useProfile() {
 
 	response.current.doc = doc;
 	response.current.value = value;
+
+	response.current.hasRequiredProfileData = hasRequiredProfileData.bind(
+		null,
+		response.current.value
+	);
 	return response.current;
 }
 

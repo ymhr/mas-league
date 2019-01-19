@@ -13,12 +13,16 @@ function ProfileForm({ form }) {
 		e.preventDefault();
 		validateFields((err, values) => {
 			if (!err) {
-				doc.update(values);
+				if (value.data()) {
+					doc.update(values);
+				} else {
+					doc.set(values);
+				}
 			}
 		});
 	}
 
-	const data = value.data();
+	const data = value.data() || {};
 
 	return (
 		<>

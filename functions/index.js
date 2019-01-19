@@ -10,9 +10,9 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 	response.send('Hello from Firebase!');
 });
 
-exports.createUserProfileDocument = functions.auth.user().onCreate((user) => {
-	const db = admin.firestore();
-	db.collection('profiles')
-		.doc(user.uid)
-		.set({});
-});
+// exports.createUserProfileDocument = functions.auth.user().onCreate((user) => {
+// 	const db = admin.firestore();
+// 	db.collection('profiles')
+// 		.doc(user.uid)
+// 		.set({});
+// });
