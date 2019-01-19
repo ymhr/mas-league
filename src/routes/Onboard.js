@@ -14,10 +14,6 @@ function Onboard({ getFieldDecorator, history }) {
 
 	data.current = value.data() || {};
 
-	// const hasRequiredData = ['firstName', 'lastName']
-	// 	.map((fieldName) => !!data.current[fieldName])
-	// 	.every((f) => f);
-	console.log('has', hasRequiredProfileData());
 	const currentStep = hasRequiredProfileData() ? 1 : 0;
 
 	function redirectToHome() {
