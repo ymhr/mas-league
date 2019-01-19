@@ -1,5 +1,4 @@
 import React from 'react';
-import firebase from 'firebase/app';
 import League from 'components/leagues/League';
 import Loading from 'components/Loading';
 import { useQuery } from 'hooks/firebase';

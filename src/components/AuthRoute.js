@@ -7,11 +7,7 @@ import { useProfile } from 'hooks/firebase';
 
 export default function AuthRoute({ component: Component, ...props }) {
 	const { initialising, user } = useAuthState(firebase.auth());
-	const {
-		loading: profileLoading,
-		error: profileError,
-		hasRequiredProfileData
-	} = useProfile();
+	const { loading: profileLoading, hasRequiredProfileData } = useProfile();
 
 	return (
 		<Route

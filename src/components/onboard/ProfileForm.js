@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Row, Col, Button, Steps } from 'antd';
+import { Form, Input, Row, Col, Button } from 'antd';
 import { useProfile } from 'hooks/firebase';
 import Loading from 'components/Loading';
 

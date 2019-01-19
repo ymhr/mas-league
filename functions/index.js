@@ -16,3 +16,11 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 // 		.doc(user.uid)
 // 		.set({});
 // });
+
+function diffArray(a, b) {
+	return a.filter((n) => b.includes(n));
+}
+
+// exports.updateDogLeagues = functions.firestore
+// 	.document('leagues/{leagueId}')
+// 	.onUpdate((change, context) => {});
