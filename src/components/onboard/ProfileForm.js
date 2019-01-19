@@ -22,16 +22,6 @@ function ProfileForm({ form }) {
 
 	return (
 		<>
-			<Steps current={0}>
-				<Steps.Step
-					title="Profile"
-					description="Some basic details about you"
-				/>
-				<Steps.Step
-					title="Dogs"
-					description="Add your dogs to your profile!"
-				/>
-			</Steps>
 			<Row>
 				<Col xs={24} sm={12} md={8}>
 					<Form onSubmit={onSubmit}>

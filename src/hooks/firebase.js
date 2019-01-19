@@ -23,6 +23,7 @@ export function useProfile() {
 		value: null,
 		error: null
 	});
+
 	const { initialising, user } = useAuthState(firebase.auth());
 	const { loading, error, value, doc } = useDoc('profiles', user && user.uid);
 

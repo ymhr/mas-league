@@ -13,21 +13,42 @@ export default function AuthRoute({ component: Component, ...props }) {
 		error: profileError
 	} = useProfile();
 
-	if (initialising || profileLoading) {
-		return <Loading />;
+	function hasCompleteProfile() {
+		console.log(
+			'has',
+			profile && profile.data && Object.keys(profile.data()).length >= 2
+		);
+		return (
+			profile && profile.data && Object.keys(profile.data()).length >= 2
+		);
 	}
 
-	const hasProfile =
-		profile && profile.data && Object.keys(profile.data()).length >= 2;
+	// if(!profileLoading && !profile) return <Redirect to="/onboard" />;
+
+	// if (!initialising && !user) return <Redirect to="/login" />;
+
+	// if (initialising || profileLoading) {
+	// 	return <Loading />;
+	// }
+
+	// const hasProfile =
+	// 	profile && profile.data && Object.keys(profile.data()).length >= 2;
 
 	return (
 		<Route
 			{...props}
 			render={(props) => {
-				if (!user) return <Redirect to="/login" />;
-				if (!hasProfile && props.match.path !== '/onboard') {
+				if (!initialising && !user) return <Redirect to="/login" />;
+
+				if (
+					!profileLoading &&
+					(!profile || !hasCompleteProfile()) &&
+					props.match.path !== '/onboard'
+				) {
 					return <Redirect to="/onboard" />;
 				}
+
+				if (initialising || profileLoading) return <Loading />;
 
 				return <Component {...props} />;
 			}}

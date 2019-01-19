@@ -2,8 +2,10 @@ import React, { useRef } from 'react';
 import ProfileForm from 'components/onboard/ProfileForm';
 import { useProfile } from 'hooks/firebase';
 import Loading from 'components/Loading';
+import { Steps, Button } from 'antd';
+import DogForm from 'components/onboard/DogForm';
 
-function Onboard({ getFieldDecorator }) {
+function Onboard({ getFieldDecorator, history }) {
 	const data = useRef(null);
 
 	const { value, loading, error } = useProfile();
@@ -16,6 +18,12 @@ function Onboard({ getFieldDecorator }) {
 		.map((fieldName) => !!data.current[fieldName])
 		.every((f) => f);
 
+	const currentStep = hasRequiredData ? 1 : 0;
+
+	function redirectToHome() {
+		history.push('/');
+	}
+
 	return (
 		<>
 			<h1>Welcome to the fun MAS league!</h1>
@@ -24,7 +32,26 @@ function Onboard({ getFieldDecorator }) {
 				Don't worry, we just need this information for administrative
 				purposes.
 			</p>
-			{hasRequiredData ? <h1>All good!</h1> : <ProfileForm />}
+			<Steps current={currentStep}>
+				<Steps.Step
+					title="Profile"
+					description="Some basic details about you"
+				/>
+				<Steps.Step
+					title="Dogs"
+					description="Add your dogs to your profile!"
+				/>
+			</Steps>
+			{hasRequiredData ? (
+				<>
+					<DogForm />
+					<Button type="primary" block onClick={redirectToHome}>
+						Done
+					</Button>
+				</>
+			) : (
+				<ProfileForm />
+			)}
 		</>
 	);
 }
