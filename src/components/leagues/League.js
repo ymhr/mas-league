@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDoc } from 'hooks/firebase';
 import Loading from 'components/Loading';
-import { Button, Col, Row } from 'antd';
+import { Button, Col, Row, Modal } from 'antd';
+import DogSelector from 'components/admin/DogSelector';
+import firebase from 'firebase/app';
 
 function Dog({ id, grade }) {
 	const { loading, error, value } = useDoc('dogs', id);
@@ -18,10 +20,38 @@ function Dog({ id, grade }) {
 }
 
 export default function League({ doc }) {
+	const [modalOpen, setModalOpen] = useState(false);
+	const { loading, error, value } = useDoc('leagues', doc.id);
+
+	if (loading || error) return <Loading />;
+
 	const data = doc.data();
 
 	const dogs = (data && data.dogs && Object.keys(data.dogs)) || [];
 	const details = (data && data.dogs && Object.values(data.dogs)) || [];
+
+	function openModal() {
+		setModalOpen(true);
+	}
+
+	function closeModal() {
+		setModalOpen(false);
+	}
+
+	function onSelect(dog) {
+		const dogData = dog.data();
+		const leagueData = doc.data();
+
+		const entry = { grade: dogData.grade };
+
+		const leagueDogs = { ...leagueData.dogs, [dog.id]: entry };
+
+		firebase
+			.firestore()
+			.collection('leagues')
+			.doc(doc.id)
+			.update({ dogs: leagueDogs });
+	}
 
 	return (
 		<>
@@ -30,8 +60,8 @@ export default function League({ doc }) {
 					<h2>{doc.id}</h2>
 				</Col>
 				<Col xs={24} sm={12}>
-					<Button type="primary" icon="plus">
-						Add dog
+					<Button type="primary" icon="plus" onClick={openModal}>
+						Add dogs
 					</Button>
 				</Col>
 			</Row>
@@ -40,6 +70,14 @@ export default function League({ doc }) {
 					<Dog key={dog} id={dog} grade={details[i].grade} />
 				))}
 			</ul>
+			<Modal
+				title="Select a dog"
+				visible={modalOpen}
+				onOk={closeModal}
+				onCancel={closeModal}
+			>
+				<DogSelector leagueId={doc.id} onSelect={onSelect} />
+			</Modal>
 		</>
 	);
 }

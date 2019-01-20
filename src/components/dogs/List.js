@@ -25,7 +25,7 @@ export default function List() {
 	const { error, loading, value } = useCollection(dogsRef);
 
 	const newDoc = db.collection('dogs').doc();
-	console.log(error);
+
 	if (loading) return <Loading />;
 	if (error) return <h1>Something went wrong</h1>;
 
