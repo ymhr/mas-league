@@ -5,7 +5,7 @@ import { Button, Col, Row, Modal } from 'antd';
 import DogSelector from 'components/admin/DogSelector';
 import firebase from 'firebase/app';
 
-function Dog({ id, grade }) {
+function Dog({ id, grade, remove }) {
 	const { loading, error, value } = useDoc('dogs', id);
 
 	if (loading || error || !value) return <Loading />;
@@ -14,16 +14,22 @@ function Dog({ id, grade }) {
 
 	return (
 		<p>
-			{data.name} (Grade: {grade})
+			{data.name} (Grade: {grade}){' '}
+			<Button
+				icon="delete"
+				type="danger"
+				shape="circle"
+				onClick={remove.bind(null, value)}
+			/>
 		</p>
 	);
 }
 
 export default function League({ doc }) {
 	const [modalOpen, setModalOpen] = useState(false);
-	const { loading, error, value } = useDoc('leagues', doc.id);
+	// const { loading, error, value } = useDoc('leagues', doc.id);
 
-	if (loading || error) return <Loading />;
+	// if (loading || error) return <Loading />;
 
 	const data = doc.data();
 
@@ -53,6 +59,20 @@ export default function League({ doc }) {
 			.update({ dogs: leagueDogs });
 	}
 
+	function removeDogFromLeague(dog) {
+		const leagueData = doc.data();
+
+		const leagueDogs = { ...leagueData.dogs };
+
+		delete leagueDogs[dog.id];
+
+		firebase
+			.firestore()
+			.collection('leagues')
+			.doc(doc.id)
+			.update({ dogs: leagueDogs });
+	}
+
 	return (
 		<>
 			<Row>
@@ -67,7 +87,12 @@ export default function League({ doc }) {
 			</Row>
 			<ul>
 				{dogs.map((dog, i) => (
-					<Dog key={dog} id={dog} grade={details[i].grade} />
+					<Dog
+						key={dog}
+						id={dog}
+						grade={details[i].grade}
+						remove={removeDogFromLeague}
+					/>
 				))}
 			</ul>
 			<Modal

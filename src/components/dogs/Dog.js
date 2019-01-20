@@ -5,7 +5,6 @@ import { Button, Form, Input, InputNumber, Icon } from 'antd';
 import firebase from 'firebase/app';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Loading from 'components/Loading';
-import { useDoc } from 'hooks/firebase';
 
 const BoxPosed = posed.div({
 	open: {
@@ -126,7 +125,7 @@ function Dog({ dog, form }) {
 		}
 	}
 
-	const { doc: dogDoc } = useDoc('dogs', dog.id);
+	// const { doc: dogDoc } = useDoc('dogs', dog.id);
 
 	function close() {
 		setIsOpen(false);
@@ -140,6 +139,11 @@ function Dog({ dog, form }) {
 	function submit(e) {
 		e.preventDefault();
 		form.validateFields((err, values) => {
+			const dogDoc = firebase
+				.firestore()
+				.collection('dogs')
+				.doc(dog.id);
+
 			if (!err) {
 				if (isNew) {
 					dogDoc.set(values);
@@ -152,6 +156,11 @@ function Dog({ dog, form }) {
 	}
 
 	function deleteDog(e) {
+		const dogDoc = firebase
+			.firestore()
+			.collection('dogs')
+			.doc(dog.id);
+
 		e.preventDefault();
 		dogDoc.delete();
 	}
