@@ -12,7 +12,7 @@ function Dog({ id, grade }) {
 
 	return (
 		<p>
-			{data.name} (Grade {grade})
+			{data.name} (Grade: {grade})
 		</p>
 	);
 }
@@ -21,7 +21,7 @@ export default function League({ doc }) {
 	const data = doc.data();
 
 	const dogs = (data && data.dogs && Object.keys(data.dogs)) || [];
-	const grades = (data && data.dogs && Object.values(data.dogs)) || [];
+	const details = (data && data.dogs && Object.values(data.dogs)) || [];
 
 	return (
 		<>
@@ -37,7 +37,7 @@ export default function League({ doc }) {
 			</Row>
 			<ul>
 				{dogs.map((dog, i) => (
-					<Dog key={dog} id={dog} grade={grades[i]} />
+					<Dog key={dog} id={dog} grade={details[i].grade} />
 				))}
 			</ul>
 		</>
