@@ -2,14 +2,23 @@ import React from 'react';
 import firebase from 'firebase/app';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import Loading from 'components/Loading';
+import styled from 'styled-components';
+
+const DogWrapper = styled.div`
+	cursor: pointer;
+
+	&:hover {
+		background-color: #eee;
+	}
+`;
 
 function Dog({ doc, click }) {
 	const data = doc.data();
 
 	return (
-		<div onClick={click}>
+		<DogWrapper onClick={click}>
 			{data.name} (Grade: {data.grade})
-		</div>
+		</DogWrapper>
 	);
 }
 
