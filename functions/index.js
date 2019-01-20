@@ -10,12 +10,24 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 	response.send('Hello from Firebase!');
 });
 
-// exports.createUserProfileDocument = functions.auth.user().onCreate((user) => {
-// 	const db = admin.firestore();
-// 	db.collection('profiles')
-// 		.doc(user.uid)
-// 		.set({});
-// });
+exports.fillOutUsersProfile = functions.auth.user().onCreate(user => {
+	const db = admin.firestore();
+
+	const names = user.displayName.split(' ');
+	const firstName = names[0] || null;
+	const lastName = names[names.length - 1] || null;
+	const email = user.email || null;
+	const photoUrl = user.photoUrl || null;
+
+	db.collection('profiles')
+		.doc(user.uid)
+		.set({
+			firstName,
+			lastName,
+			email,
+			photoUrl
+		});
+});
 
 exports.updateDogLeagues = functions.firestore
 	.document('leagues/{leagueId}')

@@ -21,17 +21,17 @@ export default function List() {
 	const dogsRef = db
 		.collection('dogs')
 		.where('uid', '==', firebase.auth().currentUser.uid)
-		.orderBy('name', 'desc');
+		.orderBy('name', 'asc');
 	const { error, loading, value } = useCollection(dogsRef);
 
 	const newDoc = db.collection('dogs').doc();
-
+	console.log(error);
 	if (loading) return <Loading />;
 	if (error) return <h1>Something went wrong</h1>;
 
 	return (
 		<ListContainer>
-			{value.docs.map((doc) => {
+			{value.docs.map(doc => {
 				return (
 					<ListItem key={doc.id}>
 						<Dog dog={doc} />
