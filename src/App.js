@@ -8,6 +8,8 @@ import Home from 'routes/Home';
 import YourDogs from 'routes/YourDogs';
 import Login from 'routes/Login';
 import Onboard from 'routes/Onboard';
+import LogPoints from 'routes/LogPoints';
+import Show from 'routes/Show';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -26,6 +28,14 @@ function App() {
 						<Route path="/login" component={Login} />
 						<AdminRoute path="/admin" component={Admin} />
 						<AuthRoute path="/onboard" component={Onboard} />
+						<AuthRoute
+							path="/points/:dogId/:showId"
+							component={Show}
+						/>
+						<AuthRoute
+							path="/points/:dogId"
+							component={LogPoints}
+						/>
 					</Switch>
 				</Container>
 			</div>

@@ -5,6 +5,7 @@ import { Button, Form, Input, InputNumber, Icon } from 'antd';
 import firebase from 'firebase/app';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Loading from 'components/Loading';
+import { withRouter } from 'react-router-dom';
 
 const BoxPosed = posed.div({
 	open: {
@@ -108,7 +109,7 @@ const Overlay = styled(OverlayPosed)`
 	}
 `;
 
-function Dog({ dog, form }) {
+function Dog({ dog, form, history }) {
 	const { getFieldDecorator } = form;
 	const [isOpen, setIsOpen] = useState(false);
 	const [isNew, setIsNew] = useState(false);
@@ -165,6 +166,10 @@ function Dog({ dog, form }) {
 		dogDoc.delete();
 	}
 
+	function goToLogPoints() {
+		history.push(`/points/${dog.id}`);
+	}
+
 	return (
 		<>
 			<Overlay
@@ -187,7 +192,10 @@ function Dog({ dog, form }) {
 							<span>Add a new dog</span>
 						</>
 					) : (
-						data.name
+						<>
+							{data.name}{' '}
+							<Button onClick={goToLogPoints}>Log points</Button>
+						</>
 					)}
 				</Name>
 				<PoseGroup>
@@ -236,4 +244,4 @@ function Dog({ dog, form }) {
 	);
 }
 
-export default Form.create({ name: 'dog' })(Dog);
+export default withRouter(Form.create({ name: 'dog' })(Dog));
