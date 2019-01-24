@@ -14,18 +14,18 @@ var config = {
 
 firebase.initializeApp(config);
 
-initializeFirebase(firebase);
-
 firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
 const firestore = firebase.firestore();
 
 firestore
 	.enablePersistence({ experimentalTabSynchronization: true })
-	.catch(err => {
+	.catch((err) => {
 		if (err.code === 'failed-precondition') {
 			console.error('Multiple tabs open');
 		} else if (err.code === 'unimplemented') {
 			console.error('The browser does not support offline mode');
 		}
 	});
+
+initializeFirebase(firebase);
