@@ -1,11 +1,12 @@
 import React from 'react';
-import { useDocument, useCollection } from 'react-firebase-hooks/firestore';
+import { useCollection } from 'react-firebase-hooks/firestore';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
 import firebase from 'firebase/app';
 import { Link } from 'react-router-dom';
 import AuthRoute from 'components/AuthRoute';
 import Show from 'routes/Show';
+import { List, Button } from 'antd';
 
 export default function LogPoints({ match }) {
 	const { dogId } = match.params;
@@ -16,28 +17,39 @@ export default function LogPoints({ match }) {
 
 	const showsCollection = dogDoc.collection('shows');
 
-	const {
-		loading: showsLoading,
-		error: showsError,
-		value: showsValue
-	} = useCollection(showsCollection);
+	const shows = useCollection(showsCollection);
 
-	if (showsError) return <Error error={showsError} />;
+	if (shows.error) return <Error error={shows.error} />;
 
-	if (showsLoading) return <Loading />;
+	if (shows.loading) return <Loading />;
 
 	return (
 		<>
-			<h1>Shows</h1>
 			<AuthRoute path="/points/:dogId/:showId" component={Show} />
-			{showsValue.docs.map(show => {
-				const { name } = show.data();
-				return (
-					<Link key={show.id} to={`/points/${dogId}/${show.id}`}>
-						{name}
-					</Link>
-				);
-			})}
+			<List
+				header={<h1>Shows</h1>}
+				footer={
+					<Button block icon="plus">
+						Add
+					</Button>
+				}
+				dataSource={shows.value.docs}
+				renderItem={(item) => {
+					const data = item.data();
+					return <List.Item>{data.name}</List.Item>;
+				}}
+			/>
+			{/* {shows.value.docs.map((show) => { */}
+			{/* const { name } = show.data(); */}
+			{/* return ( */}
+			{/* <List header={<h1>Shows</h1>} />
+					// <Link key={show.id} to={`/points/${dogId}/${show.id}`}>
+					// 	{name
+
+
+					// </Link> */}
+			{/* ); */}
+			{/* })} */}
 		</>
 	);
 }
