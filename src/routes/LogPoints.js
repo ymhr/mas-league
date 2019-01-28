@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import AuthRoute from 'components/AuthRoute';
 import Show from 'routes/Show';
 import { List, Button } from 'antd';
+import Form from 'components/shows/Form';
 
 export default function LogPoints({ match }) {
 	const { dogId } = match.params;
@@ -39,6 +40,7 @@ export default function LogPoints({ match }) {
 					return <List.Item>{data.name}</List.Item>;
 				}}
 			/>
+			<Form />
 			{/* {shows.value.docs.map((show) => { */}
 			{/* const { name } = show.data(); */}
 			{/* return ( */}
