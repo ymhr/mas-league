@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDoc } from 'hooks/firebase';
 import Loading from 'components/Loading';
-import { Button, Col, Row, Modal } from 'antd';
+import { Button, Col, Row, Modal, List } from 'antd';
 import DogSelector from 'components/admin/DogSelector';
 import firebase from 'firebase/app';
 
@@ -33,8 +33,8 @@ export default function League({ doc }) {
 
 	const data = doc.data();
 
-	const dogs = (data && data.dogs && Object.keys(data.dogs)) || [];
-	const details = (data && data.dogs && Object.values(data.dogs)) || [];
+	const dogs = (data && data.dogs && Object.entries(data.dogs)) || [];
+	// const details = (data && data.dogs && Object.values(data.dogs)) || [];
 
 	function openModal() {
 		setModalOpen(true);
@@ -85,7 +85,17 @@ export default function League({ doc }) {
 					</Button>
 				</Col>
 			</Row>
-			<ul>
+			<List
+				dataSource={dogs}
+				renderItem={([dog, details]) => (
+					<Dog
+						id={dog}
+						grade={details.grade}
+						remove={removeDogFromLeague}
+					/>
+				)}
+			/>
+			{/* <ul>
 				{dogs.map((dog, i) => (
 					<Dog
 						key={dog}
@@ -94,7 +104,7 @@ export default function League({ doc }) {
 						remove={removeDogFromLeague}
 					/>
 				))}
-			</ul>
+			</ul> */}
 			<Modal
 				title="Select a dog"
 				visible={modalOpen}
