@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
@@ -6,10 +6,12 @@ import firebase from 'firebase/app';
 import { Link } from 'react-router-dom';
 import AuthRoute from 'components/AuthRoute';
 import Show from 'routes/Show';
-import { List, Button } from 'antd';
+import { List, Button, Modal } from 'antd';
 import Form from 'components/shows/Form';
 
 export default function LogPoints({ match }) {
+	const [modalOpen, setModalOpen] = useState(false);
+
 	const { dogId } = match.params;
 	const dogDoc = firebase
 		.firestore()
@@ -24,13 +26,21 @@ export default function LogPoints({ match }) {
 
 	if (shows.loading) return <Loading />;
 
+	function openModal() {
+		setModalOpen(true);
+	}
+
+	function closeModal() {
+		setModalOpen(false);
+	}
+
 	return (
 		<>
 			<AuthRoute path="/points/:dogId/:showId" component={Show} />
 			<List
 				header={<h1>Shows</h1>}
 				footer={
-					<Button block icon="plus">
+					<Button block icon="plus" onClick={openModal}>
 						Add
 					</Button>
 				}
@@ -40,7 +50,14 @@ export default function LogPoints({ match }) {
 					return <List.Item>{data.name}</List.Item>;
 				}}
 			/>
-			<Form />
+			<Modal
+				title="Add a show"
+				visible={modalOpen}
+				onCancel={closeModal}
+				footer={<></>}
+			>
+				<Form onSave={closeModal} />
+			</Modal>
 			{/* {shows.value.docs.map((show) => { */}
 			{/* const { name } = show.data(); */}
 			{/* return ( */}

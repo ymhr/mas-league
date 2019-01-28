@@ -7,7 +7,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
-function ShowForm({ doc, form, dog }) {
+function ShowForm({ doc, form, dog, onSave }) {
 	const { getFieldDecorator } = form;
 	const { match } = useReactRouter();
 	const { user } = useAuthState(firebase.auth());
@@ -37,8 +37,9 @@ function ShowForm({ doc, form, dog }) {
 				} else {
 					docToUse.set(data);
 				}
+
+				onSave();
 			}
-			console.log(err, values);
 		});
 	}
 
@@ -63,12 +64,15 @@ function ShowForm({ doc, form, dog }) {
 				{getFieldDecorator('start-end', {
 					type: 'array',
 					required: true,
-					message: 'You must pick the start and end date of the show'
+					message: 'You must pick the start and end date of the show',
+					initialValue: [data.startDate, data.endDate]
 				})(<RangePicker format="YYYY-MM-DD" />)}
 			</Form.Item>
 
 			<Form.Item label="Description">
-				{getFieldDecorator('description', {})(<TextArea />)}
+				{getFieldDecorator('description', {
+					initialValue: data.description
+				})(<TextArea />)}
 			</Form.Item>
 			<Button block htmlType="submit">
 				Save
