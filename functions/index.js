@@ -7,7 +7,7 @@ admin.initializeApp();
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
 
-exports.fillOutUsersProfile = functions.auth.user().onCreate((user) => {
+exports.fillOutUsersProfile = functions.auth.user().onCreate(user => {
 	const db = admin.firestore();
 
 	const names = user.displayName.split(' ');
@@ -72,9 +72,7 @@ exports.updateDogLeagues = functions.firestore
 		removedDogs.forEach(([id]) => {
 			const doc = db.collection('dogs').doc(id);
 
-			const leagues = 
-//TODO: James, this is where you were last!
-			doc.update({
+			const leagues = doc.update({
 				[`leagues.${leagueId}`]: admin.firestore.FieldValue.delete()
 			});
 		});
