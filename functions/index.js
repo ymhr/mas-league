@@ -74,9 +74,9 @@ exports.updateDogLeagues = functions.firestore
 
 			const leagues = 
 //TODO: James, this is where you were last!
-			doc.update([
-				`leagues.${leagueId}`: admin.firestore.FieldValue.delete()
-			]);
+			doc.update({
+				[`leagues.${leagueId}`]: admin.firestore.FieldValue.delete()
+			});
 		});
 
 		return {
