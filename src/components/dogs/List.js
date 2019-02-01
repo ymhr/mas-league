@@ -1,8 +1,8 @@
 import React from 'react';
 import firebase from 'firebase/app';
 import { useCollection } from 'react-firebase-hooks/firestore';
-import Loading from 'components/Loading';
-import Dog from 'components/dogs/Dog';
+import Loading from '@/components/Loading';
+import Dog from '@/components/dogs/Dog';
 import styled from 'styled-components';
 
 const ListContainer = styled.ul`

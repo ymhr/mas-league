@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import Loading from 'components/Loading';
-import useIsAdmin from 'hooks/useIsAdmin';
+import Loading from '@/components/Loading';
+import useIsAdmin from '@/hooks/useIsAdmin';
 
 function AuthRoute({ component: Component, isAllowed, ...props }) {
 	const { isAdmin, error, loading } = useIsAdmin();

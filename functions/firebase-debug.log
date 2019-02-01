@@ -1,0 +1,28 @@
+[debug] [2019-01-30T21:27:48.744Z] ----------------------------------------------------------------------
+[debug] [2019-01-30T21:27:48.746Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\James\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js functions:shell
+[debug] [2019-01-30T21:27:48.747Z] CLI Version:   6.3.0
+[debug] [2019-01-30T21:27:48.747Z] Platform:      win32
+[debug] [2019-01-30T21:27:48.747Z] Node Version:  v11.4.0
+[debug] [2019-01-30T21:27:48.748Z] Time:          Wed Jan 30 2019 21:27:48 GMT+0000 (Greenwich Mean Time)
+[debug] [2019-01-30T21:27:48.748Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-01-30T21:27:48.756Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-01-30T21:27:48.756Z] > authorizing via signed-in user
+[debug] [2019-01-30T21:27:48.757Z] [iam] checking project mas-league for permissions ["firebase.projects.get"]
+[debug] [2019-01-30T21:27:48.758Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/mas-league:testIamPermissions  
+
+[debug] [2019-01-30T21:27:49.558Z] <<< HTTP RESPONSE 200
+[info] i  functions: Preparing to emulate functions.
+[debug] [2019-01-30T21:27:50.089Z] Fetching environment
+[debug] [2019-01-30T21:27:50.091Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/mas-league  
+ 
+[debug] [2019-01-30T21:27:50.828Z] <<< HTTP RESPONSE 200
+[debug] [2019-01-30T21:27:50.828Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/663624185341:getServerAppConfig  
+ 
+[debug] [2019-01-30T21:27:51.074Z] <<< HTTP RESPONSE 200
+[debug] [2019-01-30T21:27:51.075Z] Starting @google-cloud/functions-emulator
+[debug] [2019-01-30T21:27:52.617Z] Parsing function triggers
+[debug] [2019-01-30T21:27:52.760Z] Deploying functions locally
+[debug] [2019-01-30T21:27:52.762Z] Deploying functions locally
+[info] +  functions: fillOutUsersProfile
+[info] +  functions: updateDogLeagues

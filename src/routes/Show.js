@@ -1,8 +1,8 @@
 import React from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import firebase from 'firebase/app';
-import Loading from 'components/Loading';
-import Error from 'components/Error';
+import Loading from '@/components/Loading';
+import Error from '@/components/Error';
 import posed from 'react-pose';
 import styled from 'styled-components';
 import {Button} from 'antd';

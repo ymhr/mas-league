@@ -3,7 +3,7 @@ import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase/app';
 import { Redirect } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import Loading from 'components/Loading';
+import Loading from '@/components/Loading';
 
 const uiConfig = {
 	signInFlow: 'popup',

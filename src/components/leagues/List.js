@@ -1,6 +1,6 @@
 import React from 'react';
-import League from 'components/leagues/League';
-import Loading from 'components/Loading';
+import League from '@/components/leagues/League';
+import Loading from '@/components/Loading';
 import firebase from 'firebase/app';
 import { useCollection } from 'react-firebase-hooks/firestore';
 

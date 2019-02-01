@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Button, Form, Input, InputNumber, Icon } from 'antd';
 import firebase from 'firebase/app';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import Loading from 'components/Loading';
+import Loading from '@/components/Loading';
 import { withRouter } from 'react-router-dom';
 
 const BoxPosed = posed.div({

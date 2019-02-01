@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Input, Row, Col, Button } from 'antd';
-import { useProfile } from 'hooks/firebase';
-import Loading from 'components/Loading';
+import { useProfile } from '@/hooks/firebase';
+import Loading from '@/components/Loading';
 
 function ProfileForm({ form }) {
 	const { getFieldDecorator, validateFields } = form;

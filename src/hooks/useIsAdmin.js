@@ -1,7 +1,7 @@
 import { useAuthState } from 'react-firebase-hooks/auth';
 import firebase from 'firebase/app';
 import { useState } from 'react';
-import { useDoc } from 'hooks/firebase';
+import { useDoc } from '@/hooks/firebase';
 
 export default function useIsAdmin() {
 	const { initialising, user } = useAuthState(firebase.auth());

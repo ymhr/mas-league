@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
-import Loading from 'components/Loading';
-import Error from 'components/Error';
+import Loading from '@/components/Loading';
+import Error from '@/components/Error';
 import firebase from 'firebase/app';
 import { Link } from 'react-router-dom';
-import AuthRoute from 'components/AuthRoute';
-import Show from 'routes/Show';
+import AuthRoute from '@/components/AuthRoute';
+import Show from '@/routes/Show';
 import { List, Button, Modal } from 'antd';
-import Form from 'components/shows/Form';
+import Form from '@/components/shows/Form';
 
 export default function LogPoints({ match }) {
 	const [modalOpen, setModalOpen] = useState(false);
