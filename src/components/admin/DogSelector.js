@@ -1,7 +1,7 @@
 import React from 'react';
 import firebase from 'firebase/app';
 import { useCollection } from 'react-firebase-hooks/firestore';
-import Loading from 'components/Loading';
+import Loading from '@/components/Loading';
 import styled from 'styled-components';
 
 const DogWrapper = styled.div`
@@ -28,7 +28,6 @@ export default function DogSelector({ leagueId, onSelect }) {
 	);
 
 	function selected(doc) {
-		console.log('clicked');
 		onSelect(doc);
 	}
 
@@ -37,13 +36,13 @@ export default function DogSelector({ leagueId, onSelect }) {
 	//List all dogs who are not in the 2019 league
 	return value.docs
 		.filter(
-			doc =>
+			(doc) =>
 				doc &&
 				doc.data &&
 				doc.data() &&
-				(!doc.data().leagues || !doc.data().leagues.includes(leagueId))
+				(!doc.data().leagues || !doc.data().leagues[leagueId])
 		)
-		.map(doc => (
+		.map((doc) => (
 			<Dog key={doc.id} doc={doc} click={selected.bind(null, doc)} />
 		));
 }

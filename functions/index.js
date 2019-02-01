@@ -6,11 +6,8 @@ admin.initializeApp();
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
-exports.helloWorld = functions.https.onRequest((request, response) => {
-	response.send('Hello from Firebase!');
-});
 
-exports.fillOutUsersProfile = functions.auth.user().onCreate(user => {
+exports.fillOutUsersProfile = functions.auth.user().onCreate((user) => {
 	const db = admin.firestore();
 
 	const names = user.displayName.split(' ');
@@ -36,34 +33,54 @@ exports.updateDogLeagues = functions.firestore
 		const newData = change.after.data();
 
 		//Something probably went wrong...
-		if (!originalData || !newData) return;
+		if (!originalData || !newData) return { error: 'noData' };
 
 		const leagueId = context.params.leagueId;
 		const originalDogs = originalData.dogs || {};
 		const newDogs = newData.dogs || {};
 
-		const originalDogIds = new Set(Object.keys(originalDogs));
-		const newDogIds = new Set(Object.keys(newDogs));
+		const originalDogEntries = Object.entries(originalDogs);
+		const newDogEntries = Object.entries(newDogs);
+
+		console.log('original dogs', originalDogEntries);
+		console.log('new dogs', newDogEntries);
+
+		const originalDogIds = new Set(originalDogEntries.map(([id]) => id));
+		const newDogIds = new Set(newDogEntries.map(([id]) => id));
 
 		//Added dogs are dogs which ARE in new dogs, but are not in original dogs
-		const addedDogs = [...newDogIds].filter(d => !originalDogIds.has(d));
+		const addedDogs = newDogEntries.filter(
+			([id]) => !originalDogIds.has(id)
+		);
 
 		//Removed dogs are dogs which ARE in original dogs, but are not in new dogs.
-		const removedDogs = [...originalDogIds].filter(d => !newDogIds.has(d));
+		const removedDogs = originalDogEntries.filter(
+			([id]) => !newDogIds.has(id)
+		);
 
 		const db = admin.firestore();
 
-		addedDogs.forEach(id => {
+		addedDogs.forEach(([id, data]) => {
 			const doc = db.collection('dogs').doc(id);
 			doc.update({
-				leagues: admin.firestore.FieldValue.arrayUnion(leagueId)
+				leagues: {
+					[leagueId]: data
+				}
 			});
 		});
 
-		removedDogs.forEach(id => {
+		removedDogs.forEach(([id]) => {
 			const doc = db.collection('dogs').doc(id);
-			doc.update({
-				leagues: admin.firestore.FieldValue.arrayRemove(leagueId)
-			});
+
+			const leagues = 
+
+			doc.update([
+				`leagues.${leagueId}`: admin.firestore.FieldValue.delete()
+			]);
 		});
+
+		return {
+			added: addedDogs.length,
+			removed: removedDogs.length
+		};
 	});

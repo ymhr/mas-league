@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useDoc } from 'hooks/firebase';
-import Loading from 'components/Loading';
+import { useDoc } from '@/hooks/firebase';
+import Loading from '@/components/Loading';
 import { Button, Col, Row, Modal, List } from 'antd';
-import DogSelector from 'components/admin/DogSelector';
+import DogSelector from '@/components/admin/DogSelector';
 import firebase from 'firebase/app';
 
 function Dog({ id, grade, remove }) {

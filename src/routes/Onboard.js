@@ -1,9 +1,9 @@
 import React, { useRef } from 'react';
-import ProfileForm from 'components/onboard/ProfileForm';
-import { useProfile } from 'hooks/firebase';
-import Loading from 'components/Loading';
+import ProfileForm from '@/components/onboard/ProfileForm';
+import { useProfile } from '@/hooks/firebase';
+import Loading from '@/components/Loading';
 import { Steps, Button } from 'antd';
-import DogForm from 'components/onboard/DogForm';
+import DogForm from '@/components/onboard/DogForm';
 
 function Onboard({ getFieldDecorator, history }) {
 	const data = useRef(null);

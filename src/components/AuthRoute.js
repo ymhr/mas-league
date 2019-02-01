@@ -2,8 +2,8 @@ import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import firebase from 'firebase/app';
-import Loading from 'components/Loading';
-import { useProfile } from 'hooks/firebase';
+import Loading from '@/components/Loading';
+import { useProfile } from '@/hooks/firebase';
 
 export default function AuthRoute({ component: Component, ...props }) {
 	const { initialising, user } = useAuthState(firebase.auth());

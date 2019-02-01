@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import LoginButton from 'components/layout/LoginButton';
+import LoginButton from '@/components/layout/LoginButton';
 import { Row, Col, Menu, Affix } from 'antd';
 import useRouter from 'use-react-router';
-import AdminButton from 'components/layout/AdminButton';
+import AdminButton from '@/components/layout/AdminButton';
 
 const HeaderBar = styled.header`
 	width: 100%;
