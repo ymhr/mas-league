@@ -1,7 +1,6 @@
 const path = require('path');
 
 module.exports = function({ env, paths }) {
-	console.log(env, paths);
 	return {
 		webpack: {
 			alias: {

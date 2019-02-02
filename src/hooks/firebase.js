@@ -9,7 +9,6 @@ export function useDoc(collection, id) {
 	try {
 		return useDocument(db.collection(collection).doc(id));
 	} catch (e) {
-		console.log('whoops doc error');
 		res.loading = false;
 		return res;
 	}
