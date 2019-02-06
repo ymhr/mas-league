@@ -4,7 +4,7 @@
 	"private": true,
 	"dependencies": {
 		"@craco/craco": "^3.4.1",
-		"antd": "^3.13.0",
+		"antd": "^3.13.1",
 		"firebase": "^5.8.2",
 		"informed": "^1.10.12",
 		"react": "16.8.0-alpha.0",
