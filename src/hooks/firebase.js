@@ -10,6 +10,8 @@ export function useDoc(collection, id) {
 	const [doc, setDoc] = useState(undefined);
 
 	useEffect(() => {
+		if (!collection || !id) return;
+
 		setLoading(true);
 		if (collection && id) {
 			const doc = db.collection(collection).doc(id);

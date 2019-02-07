@@ -1,16 +1,20 @@
 import React from 'react';
-import { Form, Input, DatePicker, Button } from 'antd';
+import { Form, Input, DatePicker, Button, Select } from 'antd';
 import firebase from 'firebase/app';
 import useReactRouter from 'use-react-router';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useDocument } from 'react-firebase-hooks/firestore';
+import Loading from '@/components/Loading';
+import Error from '@/components/Error';
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
-function ShowForm({ doc, form, dog, onSave }) {
+function ShowForm({ doc, form, dogDoc, onSave }) {
 	const { getFieldDecorator } = form;
 	const { match } = useReactRouter();
 	const { user } = useAuthState(firebase.auth());
+	const dog = useDocument(dogDoc);
 
 	const { dogId } = match.params;
 
@@ -24,12 +28,21 @@ function ShowForm({ doc, form, dog, onSave }) {
 						.firestore()
 						.collection(`dogs/${dogId}/shows`)
 						.doc();
+				console.log({
+					startDate: values['start-end'][0].format(),
+					endDate: values['start-end'][1].format(),
+					name: values.name,
+					description: values.description,
+					uid: user.uid,
+					league: values.league
+				});
 				const data = {
 					startDate: values['start-end'][0].format(),
 					endDate: values['start-end'][1].format(),
 					name: values.name,
 					description: values.description,
-					uid: user.uid
+					uid: user.uid,
+					league: values.league
 				};
 
 				if (doc) {
@@ -45,6 +58,11 @@ function ShowForm({ doc, form, dog, onSave }) {
 
 	let data = {};
 	if (doc) data = doc.data();
+	if (dog.loading) return <Loading />;
+	if (dog.error) return <Error error={dog.error} />;
+
+	const dogData = dog.value.data();
+	const availableLeagues = Object.keys(dogData.leagues);
 
 	return (
 		<Form onSubmit={submit} layout="vertical">
@@ -58,6 +76,22 @@ function ShowForm({ doc, form, dog, onSave }) {
 					],
 					initialValue: data.name
 				})(<Input />)}
+			</Form.Item>
+
+			<Form.Item label="League">
+				{getFieldDecorator('league', {
+					required: true,
+					message: 'You must pick the league this is for',
+					initialValue: data.league
+				})(
+					<Select>
+						{availableLeagues.map((league) => (
+							<Select.Option key={league} value={league}>
+								{league}
+							</Select.Option>
+						))}
+					</Select>
+				)}
 			</Form.Item>
 
 			<Form.Item label="Dates">

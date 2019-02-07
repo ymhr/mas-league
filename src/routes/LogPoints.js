@@ -4,8 +4,6 @@ import Loading from '@/components/Loading';
 import Error from '@/components/Error';
 import firebase from 'firebase/app';
 import { Link } from 'react-router-dom';
-import AuthRoute from '@/components/AuthRoute';
-import Show from '@/routes/Show';
 import { List, Button, Modal } from 'antd';
 import Form from '@/components/shows/Form';
 
@@ -36,7 +34,6 @@ export default function LogPoints({ match }) {
 
 	return (
 		<>
-			<AuthRoute path="/points/:dogId/:showId" component={Show} />
 			<List
 				header={<h1>Shows</h1>}
 				footer={
@@ -45,9 +42,19 @@ export default function LogPoints({ match }) {
 					</Button>
 				}
 				dataSource={shows.value.docs}
-				renderItem={(item) => {
-					const data = item.data();
-					return <List.Item>{data.name}</List.Item>;
+				renderItem={(show) => {
+					const data = show.data();
+					return (
+						<List.Item>
+							{' '}
+							<Link
+								key={show.id}
+								to={`/points/${dogId}/${show.id}`}
+							>
+								{data.name} ({data.league})
+							</Link>
+						</List.Item>
+					);
 				}}
 			/>
 			<Modal
@@ -56,19 +63,8 @@ export default function LogPoints({ match }) {
 				onCancel={closeModal}
 				footer={<></>}
 			>
-				<Form onSave={closeModal} />
+				<Form onSave={closeModal} dogDoc={dogDoc} />
 			</Modal>
-			{/* {shows.value.docs.map((show) => { */}
-			{/* const { name } = show.data(); */}
-			{/* return ( */}
-			{/* <List header={<h1>Shows</h1>} />
-					// <Link key={show.id} to={`/points/${dogId}/${show.id}`}>
-					// 	{name
-
-
-					// </Link> */}
-			{/* ); */}
-			{/* })} */}
 		</>
 	);
 }

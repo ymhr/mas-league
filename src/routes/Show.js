@@ -1,11 +1,12 @@
 import React from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
+import { useDoc } from '@/hooks/firebase';
 import firebase from 'firebase/app';
 import Loading from '@/components/Loading';
 import Error from '@/components/Error';
 import posed from 'react-pose';
 import styled from 'styled-components';
-import {Button} from 'antd';
+import { Button } from 'antd';
 
 const BoxPosed = posed.div({
 	open: {
@@ -112,16 +113,24 @@ const Overlay = styled(OverlayPosed)`
 export default function Show({ match }) {
 	const { dogId, showId } = match.params;
 
-	const { loading, error, value } = useCollection(
+	const runs = useCollection(
 		firebase.firestore().collection(`/dogs/${dogId}/shows/${showId}/runs`)
 	);
 
-	if (loading) return <Loading />;
-	if (error) return <Error error={error} />;
+	const dog = useDoc('dogs', dogId);
+	const show = useDoc(`dogs/${dogId}/shows`, showId);
+
+	if (runs.loading || dog.loading || show.loading) return <Loading />;
+	if (runs.error) return <Error error={runs.error} />;
+	if (dog.error) return <Error error={dog.error} />;
+	if (show.error) return <Error error={show.error} />;
+
+	const dogData = dog.value.data();
+	const showData = show.value.data();
 
 	return (
 		<p>
-			{dogId} {showId}
+			{dogData.name} &rarr; {showData.name}
 		</p>
 	);
 }
