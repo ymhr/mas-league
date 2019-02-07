@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDoc } from '@/hooks/firebase';
 import Loading from '@/components/Loading';
-import { Button, Col, Row, Modal, List } from 'antd';
+import { Button, Col, Row, Modal, List, Popconfirm } from 'antd';
 import DogSelector from '@/components/admin/DogSelector';
 import firebase from 'firebase/app';
 
@@ -15,12 +15,12 @@ function Dog({ id, grade, remove }) {
 	return (
 		<p>
 			{data.name} (Grade: {grade}){' '}
-			<Button
-				icon="delete"
-				type="danger"
-				shape="circle"
-				onClick={remove.bind(null, value)}
-			/>
+			<Popconfirm
+				title="Are you sure you want to delete this dog? It is not possible to reverse this."
+				onConfirm={remove.bind(null, value)}
+			>
+				<Button icon="delete" type="danger" shape="circle" />
+			</Popconfirm>
 		</p>
 	);
 }
