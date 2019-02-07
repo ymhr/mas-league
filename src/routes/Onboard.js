@@ -10,7 +10,12 @@ function Onboard({ getFieldDecorator, history }) {
 
 	const { value, loading, error, hasRequiredProfileData } = useProfile();
 
-	if (!data || loading || error || !value) return <Loading />;
+	if (error) {
+		console.log(error);
+		return <p>An error occurred</p>;
+	}
+
+	if (!data || loading || !value) return <Loading />;
 
 	data.current = value.data() || {};
 

@@ -7,7 +7,11 @@ function ProfileForm({ form }) {
 	const { getFieldDecorator, validateFields } = form;
 	const { loading, error, doc, value } = useProfile();
 
-	if (loading || error || value === null) return <Loading />;
+	if (error) {
+		return <p>An error occurred</p>;
+	}
+
+	if (loading || value === null) return <Loading />;
 
 	function onSubmit(e) {
 		e.preventDefault();
@@ -47,6 +51,19 @@ function ProfileForm({ form }) {
 									{
 										required: true,
 										message: 'You must enter a last name'
+									}
+								],
+								initialValue: data.lastName
+							})(<Input />)}
+						</Form.Item>
+						<Form.Item label="Email">
+							{getFieldDecorator('email', {
+								rules: [
+									{
+										required: true,
+										message:
+											'Please enter your email address',
+										pattern: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/gi
 									}
 								],
 								initialValue: data.lastName
