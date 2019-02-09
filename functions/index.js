@@ -7,7 +7,7 @@ admin.initializeApp();
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
 
-exports.fillOutUsersProfile = functions.auth.user().onCreate(user => {
+exports.fillOutUsersProfile = functions.auth.user().onCreate((user) => {
 	const db = admin.firestore();
 
 	const names = user.displayName.split(' ');
@@ -107,7 +107,7 @@ exports.dogScoreAdded = functions.firestore
 	.document('dogs/{dogId}/shows/{showId}/runs/{runId}')
 	.onCreate(async (snap, context) => {
 		//Get dog doc
-		const { dogId, runId } = context.params;
+		const { dogId, runId, showId } = context.params;
 		const dog = admin
 			.firestore()
 			.collection('dogs')
@@ -121,7 +121,11 @@ exports.dogScoreAdded = functions.firestore
 
 		//Add a prop in the runs object of [run.id]: points
 		await dog.update({
-			[`leagues.${league}.runs.${runId}`]: newPoints
+			[`leagues.${league}.runs.${runId}`]: {
+				points: newPoints,
+				showId,
+				place: runData.place
+			}
 		});
 
 		const dogSnap = await dog.get();
@@ -139,7 +143,7 @@ exports.dogScoreUpdated = functions.firestore
 	.document('dogs/{dogId}/shows/{showId}/runs/{runId}')
 	.onUpdate(async (change, context) => {
 		//Get dog doc
-		const { dogId, runId } = context.params;
+		const { dogId, runId, showId } = context.params;
 		const dog = admin
 			.firestore()
 			.collection('dogs')
@@ -152,14 +156,18 @@ exports.dogScoreUpdated = functions.firestore
 		const newPoints = convertPlaceToPoints(runData.place);
 
 		await dog.update({
-			[`leagues.${league}.runs.${runId}`]: newPoints
+			[`leagues.${league}.runs.${runId}`]: {
+				points: newPoints,
+				showId,
+				place: runData.place
+			}
 		});
 
 		const dogSnap = await dog.get();
 
 		//run through all of the logged points scores and generate a new score for the user
 		const runs = dogSnap.get(`leagues.${league}.runs`);
-		const newTotal = Object.values(runs).reduce((prev, points) => {
+		const newTotal = Object.values(runs).reduce((prev, { points }) => {
 			return (prev += points);
 		}, 0);
 
@@ -183,7 +191,7 @@ exports.dogScoreDeleted = functions.firestore
 
 		const { league } = runData;
 		const dogSnap = await dog.get();
-		const points = dogSnap.get(`leagues.${league}.runs.${runId}`);
+		const points = dogSnap.get(`leagues.${league}.runs.${runId}.points`);
 		const currentPoints = dogSnap.get(`leagues.${league}.points`);
 
 		//Add a prop in the runs object of [run.id]: points
