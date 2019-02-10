@@ -36,37 +36,36 @@ export default function Show({ match }) {
 
 	return (
 		<>
-			<h3>
-				Runs for {showData.name} ({showData.league})
-			</h3>
-			<>
-				<List
-					header={<h1>Shows</h1>}
-					footer={
-						<Button block icon="plus" onClick={openModal}>
-							Add
-						</Button>
-					}
-					dataSource={runs.value.docs}
-					renderItem={(run) => {
-						const data = run.data();
-						console.log(data);
-						return (
-							<List.Item>
-								{data.name} ({data.league})
-							</List.Item>
-						);
-					}}
-				/>
-				<Modal
-					title="Add a show"
-					visible={modalOpen}
-					onCancel={closeModal}
-					footer={<></>}
-				>
-					<Form onSave={closeModal} dog={dog} show={show} />
-				</Modal>
-			</>
+			<List
+				header={
+					<h1>
+						Runs for {showData.name} ({showData.league})
+					</h1>
+				}
+				footer={
+					<Button block icon="plus" onClick={openModal}>
+						Add
+					</Button>
+				}
+				dataSource={runs.value.docs}
+				renderItem={(run) => {
+					const data = run.data();
+					console.log(data);
+					return (
+						<List.Item>
+							{data.name} ({data.league})
+						</List.Item>
+					);
+				}}
+			/>
+			<Modal
+				title="Add a show"
+				visible={modalOpen}
+				onCancel={closeModal}
+				footer={<></>}
+			>
+				<Form onSave={closeModal} dog={dog} show={show} />
+			</Modal>
 		</>
 	);
 }

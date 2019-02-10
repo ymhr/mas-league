@@ -3,56 +3,51 @@ import { Form, Input, DatePicker, Button, Select, InputNumber } from 'antd';
 import firebase from 'firebase/app';
 import useReactRouter from 'use-react-router';
 import { useAuthState } from 'react-firebase-hooks/auth';
-// import { useDocument } from 'react-firebase-hooks/firestore';
-import Loading from '@/components/Loading';
-import Error from '@/components/Error';
-import Show from '../../routes/Show';
 import moment from 'moment';
 
 const { TextArea } = Input;
 
-function RunForm({ form, dog, show, onSave }) {
+function RunForm({ form, doc, dog, show, onSave }) {
 	const { getFieldDecorator } = form;
 	const { match } = useReactRouter();
 	const { user } = useAuthState(firebase.auth());
 	// const dog = useDocument(dogDoc);
 
-	const { dogId } = match.params;
+	const { dogId, showId } = match.params;
 
 	function submit(e) {
 		e.preventDefault();
-		// form.validateFields((err, values) => {
-		// 	if (!err) {
-		// 		const docToUse =
-		// 			doc ||
-		// 			firebase
-		// 				.firestore()
-		// 				.collection(`dogs/${dogId}/shows`)
-		// 				.doc();
-		// 		const data = {
-		// 			startDate: values['start-end'][0].format(),
-		// 			endDate: values['start-end'][1].format(),
-		// 			name: values.name,
-		// 			description: values.description,
-		// 			uid: user.uid,
-		// 			league: values.league
-		// 		};
+		form.validateFields((err, values) => {
+			if (!err) {
+				const docToUse =
+					doc ||
+					firebase
+						.firestore()
+						.collection(`dogs/${dogId}/shows/${showId}/runs`)
+						.doc();
+				const data = {
+					date: values['date'].format(),
+					description: values.description || '',
+					uid: user.uid,
+					league: values.league,
+					place: values.place,
+					name: values.name
+				};
 
-		// 		if (doc) {
-		// 			docToUse.update(data);
-		// 		} else {
-		// 			docToUse.set(data);
-		// 		}
+				if (doc) {
+					docToUse.update(data);
+				} else {
+					docToUse.set(data);
+				}
 
-		// 		onSave();
-		// 	}
-		// });
+				form.resetFields();
+
+				onSave && typeof onSave === 'function' && onSave();
+			}
+		});
 	}
 
 	let data = {};
-	// if (doc) data = doc.data();
-	// if (dog.loading) return <Loading />;
-	// if (dog.error) return <Error error={dog.error} />;
 	let dogData = {};
 	let showData = {};
 
@@ -107,6 +102,12 @@ function RunForm({ form, dog, show, onSave }) {
 
 			<Form.Item label="Date">
 				{getFieldDecorator('date', {
+					rules: [
+						{
+							required: true,
+							message: 'Which day was the run on?'
+						}
+					],
 					initialValue: data.date
 				})(
 					<DatePicker
