@@ -23,7 +23,7 @@ export default function Show({ match }) {
 	if (dog.error) return <Error error={dog.error} />;
 	if (show.error) return <Error error={show.error} />;
 
-	const dogData = dog.value.data();
+	// const dogData = dog.value.data();
 	const showData = show.value.data();
 
 	function openModal() {
@@ -64,7 +64,7 @@ export default function Show({ match }) {
 					onCancel={closeModal}
 					footer={<></>}
 				>
-					<Form onSave={closeModal} dogDoc={dog.doc} />
+					<Form onSave={closeModal} dog={dog} show={show} />
 				</Modal>
 			</>
 		</>

@@ -46,7 +46,6 @@ export default function LogPoints({ match }) {
 					const data = show.data();
 					return (
 						<List.Item>
-							{' '}
 							<Link
 								key={show.id}
 								to={`/points/${dogId}/${show.id}`}
