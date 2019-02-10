@@ -11,7 +11,6 @@ function RunForm({ form, doc, dog, show, onSave }) {
 	const { getFieldDecorator } = form;
 	const { match } = useReactRouter();
 	const { user } = useAuthState(firebase.auth());
-	// const dog = useDocument(dogDoc);
 
 	const { dogId, showId } = match.params;
 
@@ -19,12 +18,12 @@ function RunForm({ form, doc, dog, show, onSave }) {
 		e.preventDefault();
 		form.validateFields((err, values) => {
 			if (!err) {
-				const docToUse =
-					doc ||
-					firebase
-						.firestore()
-						.collection(`dogs/${dogId}/shows/${showId}/runs`)
-						.doc();
+				const db = firebase
+					.firestore()
+					.collection(`dogs/${dogId}/shows/${showId}/runs`);
+
+				const docToUse = doc && doc.id ? db.doc(doc.id) : db.doc();
+
 				const data = {
 					date: values['date'].format(),
 					description: values.description || '',
@@ -51,6 +50,7 @@ function RunForm({ form, doc, dog, show, onSave }) {
 	let dogData = {};
 	let showData = {};
 
+	if (doc) data = doc.data();
 	if (dog.value) dogData = dog.value.data();
 	if (show.value) showData = show.value.data();
 
@@ -108,7 +108,7 @@ function RunForm({ form, doc, dog, show, onSave }) {
 							message: 'Which day was the run on?'
 						}
 					],
-					initialValue: data.date
+					initialValue: moment(data.date)
 				})(
 					<DatePicker
 						format="YYYY-MM-DD"
