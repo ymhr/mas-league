@@ -4,7 +4,7 @@ import { useDoc } from '@/hooks/firebase';
 import firebase from 'firebase/app';
 import Loading from '@/components/Loading';
 import Error from '@/components/Error';
-import { Button, List, Modal } from 'antd';
+import { Button, List, Modal, Popconfirm } from 'antd';
 import Form from '@/components/runs/Form';
 
 export default function Show({ match }) {
@@ -23,7 +23,6 @@ export default function Show({ match }) {
 	if (dog.error) return <Error error={dog.error} />;
 	if (show.error) return <Error error={show.error} />;
 
-	// const dogData = dog.value.data();
 	const showData = show.value.data();
 
 	function openModal() {
@@ -32,6 +31,14 @@ export default function Show({ match }) {
 
 	function closeModal() {
 		setModalOpen(false);
+	}
+
+	function deleteRun(run) {
+		const document = firebase
+			.firestore()
+			.collection(`dogs/${dogId}/shows/${showId}/runs`)
+			.doc(run.id);
+		document.delete();
 	}
 
 	return (
@@ -50,10 +57,19 @@ export default function Show({ match }) {
 				dataSource={runs.value.docs}
 				renderItem={(run) => {
 					const data = run.data();
-					console.log(data);
 					return (
 						<List.Item>
-							{data.name} ({data.league})
+							{data.name} ({data.league}){' '}
+							<Popconfirm
+								title="Are you sure you want to delete this dog? It is not possible to reverse this."
+								onConfirm={deleteRun.bind(null, run)}
+							>
+								<Button
+									icon="delete"
+									type="danger"
+									shape="circle"
+								/>
+							</Popconfirm>
 						</List.Item>
 					);
 				}}
