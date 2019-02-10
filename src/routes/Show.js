@@ -9,7 +9,8 @@ import Form from '@/components/runs/Form';
 
 export default function Show({ match }) {
 	const { dogId, showId } = match.params;
-	const [modalOpen, setModalOpen] = useState(false);
+	const [addModalOpen, setAddModelOpen] = useState(false);
+	const [editModalOpen, setEditModalOpen] = useState(false);
 
 	const runs = useCollection(
 		firebase.firestore().collection(`/dogs/${dogId}/shows/${showId}/runs`)
@@ -25,12 +26,17 @@ export default function Show({ match }) {
 
 	const showData = show.value.data();
 
-	function openModal() {
-		setModalOpen(true);
+	function openAddModal() {
+		setAddModelOpen(true);
+	}
+
+	function openEditModal() {
+		setEditModalOpen(true);
 	}
 
 	function closeModal() {
-		setModalOpen(false);
+		setAddModelOpen(false);
+		setEditModalOpen(false);
 	}
 
 	function deleteRun(run) {
@@ -50,7 +56,7 @@ export default function Show({ match }) {
 					</h1>
 				}
 				footer={
-					<Button block icon="plus" onClick={openModal}>
+					<Button block icon="plus" onClick={openAddModal}>
 						Add
 					</Button>
 				}
@@ -58,25 +64,45 @@ export default function Show({ match }) {
 				renderItem={(run) => {
 					const data = run.data();
 					return (
-						<List.Item>
-							{data.name} ({data.league}){' '}
-							<Popconfirm
-								title="Are you sure you want to delete this dog? It is not possible to reverse this."
-								onConfirm={deleteRun.bind(null, run)}
-							>
+						<>
+							<List.Item>
+								{data.name} ({data.league}){' '}
 								<Button
-									icon="delete"
-									type="danger"
+									icon="edit"
 									shape="circle"
+									onClick={openEditModal}
 								/>
-							</Popconfirm>
-						</List.Item>
+								<Popconfirm
+									title="Are you sure you want to delete this dog? It is not possible to reverse this."
+									onConfirm={deleteRun.bind(null, run)}
+								>
+									<Button
+										icon="delete"
+										type="danger"
+										shape="circle"
+									/>
+								</Popconfirm>
+							</List.Item>
+							<Modal
+								title="Edit a run"
+								visible={editModalOpen}
+								onCancel={closeModal}
+								footer={<></>}
+							>
+								<Form
+									onSave={closeModal}
+									dog={dog}
+									show={show}
+									doc={run}
+								/>
+							</Modal>
+						</>
 					);
 				}}
 			/>
 			<Modal
-				title="Add a show"
-				visible={modalOpen}
+				title="Add a run"
+				visible={addModalOpen}
 				onCancel={closeModal}
 				footer={<></>}
 			>
