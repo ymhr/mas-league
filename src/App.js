@@ -30,10 +30,10 @@ function App() {
 						<Route path="/login" component={Login} />
 						<AdminRoute path="/admin" component={Admin} />
 						<AuthRoute path="/onboard" component={Onboard} />
-						<AuthRoute
+						{/* <AuthRoute
 							path="/points/:dogId/:showId"
 							component={Show}
-						/>
+						/> */}
 						<AuthRoute
 							path="/points/:dogId"
 							component={LogPoints}

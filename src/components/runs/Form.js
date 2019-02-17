@@ -4,15 +4,16 @@ import firebase from 'firebase/app';
 import useReactRouter from 'use-react-router';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import moment from 'moment';
+import currentLeague from '@/utils/currentLeague';
 
 const { TextArea } = Input;
 
-function RunForm({ form, doc, dog, show, onSave }) {
+function RunForm({ form, doc, dog, run, onSave }) {
 	const { getFieldDecorator } = form;
 	const { match } = useReactRouter();
 	const { user } = useAuthState(firebase.auth());
 
-	const { dogId, showId } = match.params;
+	const { dogId } = match.params;
 
 	function submit(e) {
 		e.preventDefault();
@@ -20,7 +21,7 @@ function RunForm({ form, doc, dog, show, onSave }) {
 			if (!err) {
 				const db = firebase
 					.firestore()
-					.collection(`dogs/${dogId}/shows/${showId}/runs`);
+					.collection(`dogs/${dogId}/runs`);
 
 				const docToUse = doc && doc.id ? db.doc(doc.id) : db.doc();
 
@@ -28,9 +29,12 @@ function RunForm({ form, doc, dog, show, onSave }) {
 					date: values['date'].format(),
 					description: values.description || '',
 					uid: user.uid,
-					league: values.league,
+					league: docToUse.league || currentLeague(),
 					place: values.place,
-					name: values.name
+					showName: values.showName,
+					grade: values.grade,
+					gradedOrCombined: values.gradedOrCombined,
+					type: values.type
 				};
 
 				if (doc) {
@@ -47,55 +51,65 @@ function RunForm({ form, doc, dog, show, onSave }) {
 	}
 
 	let data = {};
-	let dogData = {};
-	let showData = {};
-
 	if (doc) data = doc.data();
-	if (dog.value) dogData = dog.value.data();
-	if (show.value) showData = show.value.data();
-
-	function disabledDate(current) {
-		if (!showData.startDate || !showData.endDate) return true;
-		if (!current) return true;
-
-		const showStartDate = moment(showData.startDate);
-		const showEndDate = moment(showData.endDate);
-
-		return !(current >= showStartDate && current <= showEndDate);
-	}
-
-	const availableLeagues = Object.keys(dogData.leagues);
 
 	return (
 		<Form onSubmit={submit} layout="vertical">
-			<Form.Item label="Name">
-				{getFieldDecorator('name', {
+			<Form.Item label="Show name">
+				{getFieldDecorator('showName', {
 					rules: [
 						{
 							required: true,
 							message: 'You must enter the name of the show.'
 						}
 					],
-					initialValue: data.name
+					initialValue: data.showName
 				})(<Input />)}
 			</Form.Item>
 
-			<Form.Item label="League">
-				{getFieldDecorator('league', {
+			<Form.Item label="Class grade">
+				{getFieldDecorator('grade', {
 					rules: [
 						{
 							required: true,
-							message: 'You must pick the league this is for'
+							message: 'What grade was the class?'
 						}
 					],
-					initialValue: data.league
+					initialValue: data.grade
+				})(<Input />)}
+			</Form.Item>
+
+			<Form.Item label="Class type">
+				{getFieldDecorator('type', {
+					rules: [
+						{
+							required: true,
+							message: 'What type of class was it?'
+						}
+					],
+					initialValue: data.type
 				})(
 					<Select>
-						{availableLeagues.map((league) => (
-							<Select.Option key={league} value={league}>
-								{league}
-							</Select.Option>
-						))}
+						<Select.Option value="agility">Agility</Select.Option>
+						<Select.Option value="jumping">Jumping</Select.Option>
+						<Select.Option value="special">Special</Select.Option>
+					</Select>
+				)}
+			</Form.Item>
+
+			<Form.Item label="Graded or combined">
+				{getFieldDecorator('gradedOrCombined', {
+					rules: [
+						{
+							required: true,
+							message: 'Graded or combined?'
+						}
+					],
+					initialValue: data.gradedOrCombined
+				})(
+					<Select>
+						<Select.Option value="graded">Graded</Select.Option>
+						<Select.Option value="combined">Combined</Select.Option>
 					</Select>
 				)}
 			</Form.Item>
@@ -109,12 +123,7 @@ function RunForm({ form, doc, dog, show, onSave }) {
 						}
 					],
 					initialValue: moment(data.date)
-				})(
-					<DatePicker
-						format="YYYY-MM-DD"
-						disabledDate={disabledDate}
-					/>
-				)}
+				})(<DatePicker format="YYYY-MM-DD" />)}
 			</Form.Item>
 
 			<Form.Item label="Place">
