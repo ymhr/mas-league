@@ -10,7 +10,6 @@ import YourDogs from '@/routes/YourDogs';
 import Login from '@/routes/Login';
 import Onboard from '@/routes/Onboard';
 import LogPoints from '@/routes/LogPoints';
-import Show from '@/routes/Show';
 import Privacy from '@/routes/Privacy';
 import styled from 'styled-components';
 
