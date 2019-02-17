@@ -56,7 +56,7 @@ function ProfileForm({ form }) {
 								initialValue: data.lastName
 							})(<Input />)}
 						</Form.Item>
-						<Form.Item label="Email">
+						{/* <Form.Item label="Email">
 							{getFieldDecorator('email', {
 								rules: [
 									{
@@ -68,7 +68,7 @@ function ProfileForm({ form }) {
 								],
 								initialValue: data.lastName
 							})(<Input />)}
-						</Form.Item>
+						</Form.Item> */}
 						<Form.Item>
 							<Button block type="primary" htmlType="submit">
 								Submit

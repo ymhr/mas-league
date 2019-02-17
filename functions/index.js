@@ -10,17 +10,17 @@ admin.initializeApp();
 exports.fillOutUsersProfile = functions.auth.user().onCreate(user => {
 	const db = admin.firestore();
 
-	const names = user.displayName.split(' ');
-	const firstName = names[0] || null;
-	const lastName = names[names.length - 1] || null;
+	// const names = user.displayName.split(' ');
+	// const firstName = names[0] || null;
+	// const lastName = names[names.length - 1] || null;
 	const email = user.email || null;
 	const photoUrl = user.photoUrl || null;
 
 	db.collection('profiles')
 		.doc(user.uid)
 		.set({
-			firstName,
-			lastName,
+			// firstName,
+			// lastName,
 			email,
 			photoUrl
 		});

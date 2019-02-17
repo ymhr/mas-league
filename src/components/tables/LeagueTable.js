@@ -22,12 +22,18 @@ export default function LeagueTable() {
 		return <h1>Error</h1>;
 	}
 
-	const data = beginners.value.docs.map(doc => ({
+	const data = beginners.value.docs.map((doc, index) => ({
 		...doc.data(),
-		key: doc.id
+		key: doc.id,
+		index: index + 1
 	}));
 
 	const columns = [
+		{
+			title: 'Place',
+			dataIndex: 'index',
+			key: 'index'
+		},
 		{
 			title: 'Name',
 			dataIndex: 'name',
