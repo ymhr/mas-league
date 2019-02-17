@@ -7,7 +7,7 @@ admin.initializeApp();
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
 
-exports.fillOutUsersProfile = functions.auth.user().onCreate((user) => {
+exports.fillOutUsersProfile = functions.auth.user().onCreate(user => {
 	const db = admin.firestore();
 
 	const names = user.displayName.split(' ');
@@ -112,10 +112,10 @@ function recalculateScore(league, dogSnap) {
 }
 
 exports.dogScoreAdded = functions.firestore
-	.document('dogs/{dogId}/shows/{showId}/runs/{runId}')
+	.document('dogs/{dogId}/runs/{runId}')
 	.onCreate(async (snap, context) => {
 		//Get dog doc
-		const { dogId, runId, showId } = context.params;
+		const { dogId, runId } = context.params;
 		const dog = admin
 			.firestore()
 			.collection('dogs')
@@ -131,7 +131,7 @@ exports.dogScoreAdded = functions.firestore
 		await dog.update({
 			[`leagues.${league}.runs.${runId}`]: {
 				points: newPoints,
-				showId,
+				id: runId,
 				place: runData.place
 			}
 		});
@@ -147,9 +147,9 @@ exports.dogScoreAdded = functions.firestore
 	});
 
 exports.dogScoreUpdated = functions.firestore
-	.document('dogs/{dogId}/shows/{showId}/runs/{runId}')
+	.document('dogs/{dogId}/runs/{runId}')
 	.onUpdate(async (change, context) => {
-		const { dogId, runId, showId } = context.params;
+		const { dogId, runId } = context.params;
 		const dog = admin
 			.firestore()
 			.collection('dogs')
@@ -164,7 +164,7 @@ exports.dogScoreUpdated = functions.firestore
 		await dog.update({
 			[`leagues.${league}.runs.${runId}`]: {
 				points: newPoints,
-				showId,
+				id: runId,
 				place: runData.place
 			}
 		});
@@ -179,7 +179,7 @@ exports.dogScoreUpdated = functions.firestore
 	});
 
 exports.dogScoreDeleted = functions.firestore
-	.document('dogs/{dogId}/shows/{showId}/runs/{runId}')
+	.document('dogs/{dogId}/runs/{runId}')
 	.onDelete(async (snap, context) => {
 		const { dogId, runId } = context.params;
 		const dog = admin
