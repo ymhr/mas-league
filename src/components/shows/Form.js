@@ -28,14 +28,7 @@ function ShowForm({ doc, form, dogDoc, onSave }) {
 						.firestore()
 						.collection(`dogs/${dogId}/shows`)
 						.doc();
-				console.log({
-					startDate: values['start-end'][0].format(),
-					endDate: values['start-end'][1].format(),
-					name: values.name,
-					description: values.description,
-					uid: user.uid,
-					league: values.league
-				});
+
 				const data = {
 					startDate: values['start-end'][0].format(),
 					endDate: values['start-end'][1].format(),
@@ -66,7 +59,7 @@ function ShowForm({ doc, form, dogDoc, onSave }) {
 
 	return (
 		<Form onSubmit={submit} layout="vertical">
-			<Form.Item label="Name">
+			<Form.Item label="Show name">
 				{getFieldDecorator('name', {
 					rules: [
 						{
@@ -85,7 +78,7 @@ function ShowForm({ doc, form, dogDoc, onSave }) {
 					initialValue: data.league
 				})(
 					<Select>
-						{availableLeagues.map((league) => (
+						{availableLeagues.map(league => (
 							<Select.Option key={league} value={league}>
 								{league}
 							</Select.Option>
@@ -94,7 +87,7 @@ function ShowForm({ doc, form, dogDoc, onSave }) {
 				)}
 			</Form.Item>
 
-			<Form.Item label="Dates">
+			<Form.Item label="Show dates">
 				{getFieldDecorator('start-end', {
 					type: 'array',
 					required: true,
