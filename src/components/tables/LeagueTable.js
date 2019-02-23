@@ -3,26 +3,23 @@ import firebase from 'firebase/app';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import Loading from '@/components/Loading';
 import { Table } from 'antd';
+import Error from '@/components/Error';
 
-export default function LeagueTable() {
-	//TODO: Make the year dynamic, make the grade range dynamic
+export default function LeagueTable({ league, minGrade, maxGrade }) {
 	const query = firebase
 		.firestore()
 		.collection('dogs')
-		.where('leagues.2019.grade', '>=', 1)
-		.where('leagues.2019.grade', '<=', 2)
-		.orderBy('leagues.2019.grade', 'desc')
-		.orderBy('leagues.2019.points', 'desc');
+		.where(`leagues.${league}.grade`, '>=', minGrade)
+		.where(`leagues.${league}.grade`, '<=', maxGrade)
+		.orderBy(`leagues.${league}.grade`, 'desc')
+		.orderBy(`leagues.${league}.points`, 'desc');
 
-	const beginners = useCollection(query);
+	const competitors = useCollection(query);
 
-	if (beginners.loading) return <Loading />;
-	if (beginners.error) {
-		console.error(beginners.error);
-		return <h1>Error</h1>;
-	}
+	if (competitors.loading) return <Loading />;
+	if (competitors.error) return <Error error={competitors.error} />;
 
-	const data = beginners.value.docs.map((doc, index) => ({
+	const data = competitors.value.docs.map((doc, index) => ({
 		...doc.data(),
 		key: doc.id,
 		index: index + 1
@@ -51,5 +48,12 @@ export default function LeagueTable() {
 		}
 	];
 
-	return <Table dataSource={data} columns={columns} pagination={false} />;
+	return (
+		<Table
+			dataSource={data}
+			columns={columns}
+			pagination={false}
+			locale={{ emptyText: 'No dogs entered yet!' }}
+		/>
+	);
 }
