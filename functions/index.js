@@ -7,7 +7,7 @@ admin.initializeApp();
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
 
-exports.fillOutUsersProfile = functions.auth.user().onCreate(user => {
+exports.fillOutUsersProfile = functions.auth.user().onCreate(async user => {
 	const db = admin.firestore();
 
 	// const names = user.displayName.split(' ');
@@ -16,14 +16,29 @@ exports.fillOutUsersProfile = functions.auth.user().onCreate(user => {
 	const email = user.email || null;
 	const photoUrl = user.photoUrl || null;
 
-	db.collection('profiles')
-		.doc(user.uid)
-		.set({
+	const document = db.collection('profiles').doc(user.uid);
+
+	const profile = await document.get();
+
+	const doesProfileExist = profile.exists;
+
+	console.log('doesProfileExist', doesProfileExist);
+
+	if (doesProfileExist) {
+		document.update({
 			// firstName,
 			// lastName,
 			email,
 			photoUrl
 		});
+	} else {
+		document.set({
+			// firstName,
+			// lastName,
+			email,
+			photoUrl
+		});
+	}
 });
 
 exports.updateDogLeagues = functions.firestore
