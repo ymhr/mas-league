@@ -135,7 +135,24 @@ function RunForm({ form, doc, dog, run, onSave }) {
 						}
 					],
 					initialValue: data.place
-				})(<InputNumber min={1} />)}
+				})(
+					<Select>
+						<Select.Option value={1}>1st</Select.Option>
+						<Select.Option value={2}>2nd</Select.Option>
+						<Select.Option value={3}>3rd</Select.Option>
+						<Select.Option value={4}>4th</Select.Option>
+						<Select.Option value={5}>5th</Select.Option>
+						<Select.Option value={6}>6th</Select.Option>
+						<Select.Option value={7}>7th</Select.Option>
+						<Select.Option value={8}>8th</Select.Option>
+						<Select.Option value={9}>9th</Select.Option>
+						<Select.Option value={10}>10th</Select.Option>
+						<Select.Option value={'10+'}>10+</Select.Option>
+						<Select.Option value={'upc'}>
+							Un-placed clear (UPC)
+						</Select.Option>
+					</Select>
+				)}
 			</Form.Item>
 
 			<Form.Item label="Description">
