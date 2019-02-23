@@ -10,6 +10,7 @@ import Home from '@/routes/Home';
 import Leagues from '@/routes/Leagues';
 import YourDogs from '@/routes/YourDogs';
 import Login from '@/routes/Login';
+import Profile from '@/routes/Profile';
 import Onboard from '@/routes/Onboard';
 import LogPoints from '@/routes/LogPoints';
 import Privacy from '@/routes/Privacy';
@@ -29,6 +30,7 @@ function App() {
 						<Route path="/" exact component={Home} />
 						<Route path="/leagues" component={Leagues} />
 						<AuthRoute path="/dogs" component={YourDogs} />
+						<AuthRoute path="/profile" component={Profile} />
 						<Route path="/login" component={Login} />
 						<AdminRoute path="/admin" component={Admin} />
 						<AuthRoute path="/onboard" component={Onboard} />

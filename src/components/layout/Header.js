@@ -43,6 +43,9 @@ function Header() {
 							<Menu.Item key="/dogs">
 								<Link to="/dogs">Your dogs</Link>
 							</Menu.Item>
+							<Menu.Item key="/profile">
+								<Link to="/profile">Profile</Link>
+							</Menu.Item>
 							<Menu.Item key="/login">
 								<LoginButton />
 							</Menu.Item>
