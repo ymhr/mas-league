@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDoc } from '@/hooks/firebase';
 import Loading from '@/components/Loading';
+import Error from '@/components/Error';
 import { Button, Col, Row, Modal, List, Popconfirm } from 'antd';
 import DogSelector from '@/components/admin/DogSelector';
 import firebase from 'firebase/app';
@@ -11,6 +12,8 @@ function Dog({ id, grade, remove }) {
 	if (loading || error || !value) return <Loading />;
 
 	const data = value.data();
+
+	if (!data) return <Error error={`No dog with for ${id}`} />;
 
 	return (
 		<p>
@@ -32,7 +35,7 @@ export default function League({ doc }) {
 	// if (loading || error) return <Loading />;
 
 	const data = doc.data();
-
+	console.log(data);
 	const dogs = (data && data.dogs && Object.entries(data.dogs)) || [];
 	// const details = (data && data.dogs && Object.values(data.dogs)) || [];
 
