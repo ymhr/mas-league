@@ -14,6 +14,7 @@ const HeaderBar = styled.header`
 const H1 = styled.h1`
 	padding: 0 20px;
 	margin: 20px 0;
+	font-family: 'Staatliches', cursive;
 `;
 
 function Header() {
