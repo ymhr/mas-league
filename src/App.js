@@ -7,6 +7,7 @@ import AuthRoute from '@/components/AuthRoute';
 import AdminRoute from '@/components/AdminRoute';
 import Admin from '@/routes/Admin';
 import Home from '@/routes/Home';
+import Leagues from '@/routes/Leagues';
 import YourDogs from '@/routes/YourDogs';
 import Login from '@/routes/Login';
 import Onboard from '@/routes/Onboard';
@@ -26,6 +27,7 @@ function App() {
 				<Container>
 					<Switch>
 						<Route path="/" exact component={Home} />
+						<Route path="/leagues" component={Leagues} />
 						<AuthRoute path="/dogs" component={YourDogs} />
 						<Route path="/login" component={Login} />
 						<AdminRoute path="/admin" component={Admin} />

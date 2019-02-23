@@ -16,7 +16,7 @@ const H1 = styled.h1`
 	margin: 20px 0;
 `;
 
-function Header({ dispatch }) {
+function Header() {
 	const { location } = useRouter();
 
 	return (
@@ -35,6 +35,10 @@ function Header({ dispatch }) {
 						>
 							<Menu.Item key="/">
 								<Link to="/">Home</Link>
+							</Menu.Item>
+
+							<Menu.Item key="/leagues">
+								<Link to="/leagues">Tables</Link>
 							</Menu.Item>
 							<Menu.Item key="/dogs">
 								<Link to="/dogs">Your dogs</Link>
