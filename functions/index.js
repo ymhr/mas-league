@@ -96,7 +96,9 @@ function convertPlaceToPoints(place) {
 		7: 14,
 		8: 13,
 		9: 12,
-		10: 11
+		10: 11,
+		'10+': 10,
+		upc: 2
 	};
 
 	// any valid place gets 10 points minimum
