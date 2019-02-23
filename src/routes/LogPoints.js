@@ -6,6 +6,7 @@ import firebase from 'firebase/app';
 import { List, Button, Modal, Popconfirm } from 'antd';
 import Form from '@/components/runs/Form';
 import { useDoc } from '@/hooks/firebase';
+import isDogInCurrentLeague from '@/utils/isDogInCurrentLeague';
 
 export default function LogPoints({ match }) {
 	const { dogId } = match.params;
@@ -19,9 +20,11 @@ export default function LogPoints({ match }) {
 		firebase.firestore().collection(`dogs/${dogId}/runs`)
 	);
 
-	if (runs.error) return <Error error={runs.error} />;
+	if (runs.error || dog.error) return <Error error={runs.error} />;
 
-	if (runs.loading) return <Loading />;
+	if (runs.loading || dog.loading) return <Loading />;
+
+	const isInCurrentLeague = isDogInCurrentLeague(dog.value);
 
 	function openAddModal() {
 		setAddModelOpen(true);
@@ -45,6 +48,9 @@ export default function LogPoints({ match }) {
 			.doc(run.id);
 		document.delete();
 	}
+
+	if (!isInCurrentLeague)
+		return <p>You have not been added to this years league yet.</p>;
 
 	return (
 		<>
