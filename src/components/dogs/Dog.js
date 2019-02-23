@@ -194,7 +194,14 @@ function Dog({ dog, form, history }) {
 					) : (
 						<>
 							{data.name}{' '}
-							<Button onClick={goToLogPoints}>Log points</Button>
+							{!isOpen && (
+								<Button
+									style={{ float: 'right' }}
+									onClick={goToLogPoints}
+								>
+									Log points
+								</Button>
+							)}
 						</>
 					)}
 				</Name>
