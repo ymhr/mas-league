@@ -107,7 +107,7 @@ export default function() {
 			</BorderedTable>
 			<p>You will be competing in your own group.</p>
 			<p>
-				At the end of the year, the winnner of each group will wun a
+				At the end of the year, the winnner of each group will win a
 				trophy, and we will do rosettes for 1st, 2nd and 3rd.
 			</p>
 		</>
