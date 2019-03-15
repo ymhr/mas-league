@@ -30,17 +30,20 @@ export default function List() {
 	if (error) return <h1>Something went wrong</h1>;
 
 	return (
-		<ListContainer>
-			{value.docs.map(doc => {
-				return (
-					<ListItem key={doc.id}>
-						<Dog dog={doc} />
-					</ListItem>
-				);
-			})}
-			<ListItem key={newDoc.id}>
-				<Dog dog={newDoc} />
-			</ListItem>
-		</ListContainer>
+		<>
+			<p>Once added here, your dog will not appear in the leagu tables until it has been approved. Please be patient.</p>
+			<ListContainer>
+				{value.docs.map(doc => {
+					return (
+						<ListItem key={doc.id}>
+							<Dog dog={doc} />
+						</ListItem>
+					);
+				})}
+				<ListItem key={newDoc.id}>
+					<Dog dog={newDoc} />
+				</ListItem>
+			</ListContainer>
+		<>
 	);
 }
