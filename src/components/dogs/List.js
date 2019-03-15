@@ -44,6 +44,6 @@ export default function List() {
 					<Dog dog={newDoc} />
 				</ListItem>
 			</ListContainer>
-		<>
+		</>
 	);
 }
