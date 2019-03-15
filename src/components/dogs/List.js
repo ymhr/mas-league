@@ -31,7 +31,7 @@ export default function List() {
 
 	return (
 		<>
-			<p>Once added here, your dog will not appear in the leagu tables until it has been approved. Please be patient.</p>
+			<p>Once added here, your dog will not appear in the league tables until it has been approved. Please be patient.</p>
 			<ListContainer>
 				{value.docs.map(doc => {
 					return (
