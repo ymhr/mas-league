@@ -1,6 +1,6 @@
 workflow "Deploy to Firebase" {
   on = "push"
-  resolves = ["Deploy"]
+  resolves = ["Telegram Deployment"]
 }
 
 action "Is master" {
