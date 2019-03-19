@@ -32,3 +32,13 @@ action "Deploy" {
   }
   needs = ["Install", "Build"]
 }
+
+action "Telegram Deployment" {
+  uses = "appleboy/telegram-action@master"
+  secrets = [
+    "TELEGRAM_TOKEN",
+    "TELEGRAM_TO",
+  ]
+  args = "A new version has been deployed",
+  needs = ["Deploy"]
+}
