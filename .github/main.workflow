@@ -1,6 +1,6 @@
 workflow "Deploy to Firebase" {
   on = "push"
-  resolves = ["Deploy"]
+  resolves = ["Telegram Deployment"]
 }
 
 action "Is master" {
@@ -31,4 +31,14 @@ action "Deploy" {
     PROJECT_ID = "mas-league"
   }
   needs = ["Install", "Build"]
+}
+
+action "Telegram Deployment" {
+  uses = "appleboy/telegram-action@master"
+  secrets = [
+    "TELEGRAM_TOKEN",
+    "TELEGRAM_TO",
+  ]
+  args = "A new version has been deployed",
+  needs = ["Deploy"]
 }
