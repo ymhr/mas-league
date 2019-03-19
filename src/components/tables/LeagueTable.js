@@ -21,7 +21,9 @@ export default function LeagueTable({ league, minGrade, maxGrade }) {
 
 	let data = competitors.value.docs.map((doc) => ({
 		...doc.data(),
-		key: doc.id
+		key: doc.id,
+		grade: doc.data().leagues[league].grade,
+		points: doc.data().leagues[league].points
 	}));
 
 	/*
@@ -30,16 +32,21 @@ export default function LeagueTable({ league, minGrade, maxGrade }) {
 		This is a ridiculous requirement, and it means that I must do the sorting here, rather than in the query.
 	*/
 	data.sort((a, b) => {
-		return a.leagues[league].points > b.leagues[league].points ? -1 : 1;
+		return a.points > b.points ? -1 : 1;
 	});
 
-	data = data.map((doc, index) => ({ ...doc, index: index + 1 }));
+	const scores = data.map((doc) => doc.points);
+
+	data = data.map((doc) => {
+		const place = scores.findIndex((score) => score === doc.points) + 1;
+		return { ...doc, place };
+	});
 
 	const columns = [
 		{
 			title: 'Place',
-			dataIndex: 'index',
-			key: 'index'
+			dataIndex: 'place',
+			key: 'place'
 		},
 		{
 			title: 'Name',
@@ -48,13 +55,13 @@ export default function LeagueTable({ league, minGrade, maxGrade }) {
 		},
 		{
 			title: 'Grade',
-			dataIndex: 'leagues.2019.grade',
-			key: 'leagues.2019.grade'
+			dataIndex: 'grade',
+			key: 'grade'
 		},
 		{
 			title: 'Points',
-			dataIndex: 'leagues.2019.points',
-			key: 'leagues.2019.points'
+			dataIndex: 'points',
+			key: 'points'
 		}
 	];
 
