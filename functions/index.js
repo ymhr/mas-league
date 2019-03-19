@@ -22,8 +22,6 @@ exports.fillOutUsersProfile = functions.auth.user().onCreate(async user => {
 
 	const doesProfileExist = profile.exists;
 
-	console.log('doesProfileExist', doesProfileExist);
-
 	if (doesProfileExist) {
 		document.update({
 			// firstName,
