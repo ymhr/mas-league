@@ -19,10 +19,9 @@ export default function LeagueTable({ league, minGrade, maxGrade }) {
 	if (competitors.loading) return <Loading />;
 	if (competitors.error) return <Error error={competitors.error} />;
 
-	const data = competitors.value.docs.map((doc, index) => ({
+	let data = competitors.value.docs.map((doc) => ({
 		...doc.data(),
-		key: doc.id,
-		index: index + 1
+		key: doc.id
 	}));
 
 	/*
@@ -33,6 +32,8 @@ export default function LeagueTable({ league, minGrade, maxGrade }) {
 	data.sort((a, b) => {
 		return a.leagues[league].points > b.leagues[league].points ? -1 : 1;
 	});
+
+	data = data.map((doc, index) => ({ ...doc, index: index + 1 }));
 
 	const columns = [
 		{
