@@ -78,7 +78,7 @@ export default function() {
 					</tr>
 					<tr>
 						<td>Clear rounds</td>
-						<td>20</td>
+						<td>2</td>
 					</tr>
 				</tbody>
 			</BorderedTable>
