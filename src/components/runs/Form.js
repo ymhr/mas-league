@@ -4,7 +4,7 @@ import firebase from 'firebase/app';
 import useReactRouter from 'use-react-router';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import moment from 'moment';
-import currentLeague from '@/utils/currentLeague';
+import { types } from '@/utils/leagueTypes';
 
 const { TextArea } = Input;
 
@@ -29,7 +29,7 @@ function RunForm({ form, doc, dog, run, onSave }) {
 					date: values['date'].format(),
 					description: values.description || '',
 					uid: user.uid,
-					league: docToUse.league || currentLeague(),
+					league: values.league,
 					place: values.place,
 					showName: values.showName,
 					grade: values.grade,
@@ -53,6 +53,11 @@ function RunForm({ form, doc, dog, run, onSave }) {
 	let data = {};
 	if (doc) data = doc.data();
 
+	function handleLeagueChange(e) {
+		console.log(e);
+		console.log(form);
+	}
+
 	return (
 		<Form onSubmit={submit} layout="vertical">
 			<Form.Item label="Show name">
@@ -65,6 +70,28 @@ function RunForm({ form, doc, dog, run, onSave }) {
 					],
 					initialValue: data.showName
 				})(<Input />)}
+			</Form.Item>
+
+			<Form.Item label="League">
+				{getFieldDecorator('league', {
+					rules: [
+						{
+							required: true,
+							message: 'You must select a league.'
+						}
+					],
+					initialValue: data.type
+				})(
+					<Select onChange={handleLeagueChange}>
+						{types.map(type => {
+							return (
+								<Select.Option key={type} value={type}>
+									{type}
+								</Select.Option>
+							);
+						})}
+					</Select>
+				)}
 			</Form.Item>
 
 			<Form.Item label="Class grade">
