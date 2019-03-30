@@ -54,7 +54,6 @@ function List({ form, doc }) {
 				onOk={toggleModal}
 				onCancel={toggleModal}
 				footer=""
-				// footer={<Button htmlType="submit">Save</Button>}
 			>
 				<Form onSubmit={submit} layout="vertical">
 					<Form.Item label="League name">
