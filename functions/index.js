@@ -55,9 +55,6 @@ exports.updateDogLeagues = functions.firestore
 		const originalDogEntries = Object.entries(originalDogs);
 		const newDogEntries = Object.entries(newDogs);
 
-		console.log('original dogs', originalDogEntries);
-		console.log('new dogs', newDogEntries);
-
 		const originalDogIds = new Set(originalDogEntries.map(([id]) => id));
 		const newDogIds = new Set(newDogEntries.map(([id]) => id));
 
@@ -77,6 +74,8 @@ exports.updateDogLeagues = functions.firestore
 			const doc = db.collection('dogs').doc(id);
 			//Set their initial points to 0 so they appear in the league right away
 			data.points = 0;
+			data.name = newData.name || context.params.leagueId;
+			data.sport = newData.sport || 'agility';
 			doc.update({
 				leagues: {
 					[leagueId]: data
