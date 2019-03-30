@@ -6,7 +6,7 @@ import firebase from 'firebase/app';
 import { List, Button, Modal, Popconfirm } from 'antd';
 import Form from '@/components/runs/Form';
 import { useDoc } from '@/hooks/firebase';
-import isDogInCurrentLeague from '@/utils/isDogInCurrentLeague';
+// import isDogInCurrentLeague from '@/utils/isDogInCurrentLeague';
 
 export default function LogPoints({ match }) {
 	const { dogId } = match.params;
@@ -24,7 +24,7 @@ export default function LogPoints({ match }) {
 
 	if (runs.loading || dog.loading) return <Loading />;
 
-	const isInCurrentLeague = isDogInCurrentLeague(dog.value);
+	// const isInCurrentLeague = isDogInCurrentLeague(dog.value);
 
 	function openAddModal() {
 		setAddModelOpen(true);
@@ -49,8 +49,8 @@ export default function LogPoints({ match }) {
 		document.delete();
 	}
 
-	if (!isInCurrentLeague)
-		return <p>You have not been added to this years league yet.</p>;
+	// if (!isInCurrentLeague)
+	// 	return <p>You have not been added to this years league yet.</p>;
 
 	return (
 		<>

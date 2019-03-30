@@ -4,7 +4,7 @@ import firebase from 'firebase/app';
 import useReactRouter from 'use-react-router';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import moment from 'moment';
-import { types } from '@/utils/leagueTypes';
+import { types } from '@/utils/sportTypes';
 
 const { TextArea } = Input;
 
@@ -12,7 +12,6 @@ function RunForm({ form, doc, dog, run, onSave }) {
 	const { getFieldDecorator } = form;
 	const { match } = useReactRouter();
 	const { user } = useAuthState(firebase.auth());
-
 	const { dogId } = match.params;
 
 	function submit(e) {
