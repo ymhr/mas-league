@@ -4,7 +4,6 @@ import firebase from 'firebase/app';
 import useReactRouter from 'use-react-router';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import moment from 'moment';
-import { types } from '@/utils/sportTypes';
 
 const { TextArea } = Input;
 
@@ -52,6 +51,9 @@ function RunForm({ form, doc, dog, run, onSave }) {
 	let data = {};
 	if (doc) data = doc.data();
 
+	const dogData = dog.value.data();
+	const dogLeagues = Object.entries(dogData.leagues);
+
 	function handleLeagueChange(e) {
 		console.log(e);
 		console.log(form);
@@ -82,10 +84,10 @@ function RunForm({ form, doc, dog, run, onSave }) {
 					initialValue: data.type
 				})(
 					<Select onChange={handleLeagueChange}>
-						{types.map(type => {
+						{dogLeagues.map(([id, data]) => {
 							return (
-								<Select.Option key={type} value={type}>
-									{type}
+								<Select.Option key={id} value={id}>
+									{data.name} ({data.sport})
 								</Select.Option>
 							);
 						})}

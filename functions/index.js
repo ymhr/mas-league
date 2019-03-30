@@ -69,17 +69,16 @@ exports.updateDogLeagues = functions.firestore
 		);
 
 		const db = admin.firestore();
-
+		console.log(addedDogs);
 		addedDogs.forEach(([id, data]) => {
 			const doc = db.collection('dogs').doc(id);
 			//Set their initial points to 0 so they appear in the league right away
 			data.points = 0;
 			data.name = newData.name || context.params.leagueId;
 			data.sport = newData.sport || 'agility';
+			console.log({ [`leagues.${leagueId}`]: data });
 			doc.update({
-				leagues: {
-					[leagueId]: data
-				}
+				[`leagues.${leagueId}`]: data
 			});
 		});
 
