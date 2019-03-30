@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDoc } from '@/hooks/firebase';
 import Loading from '@/components/Loading';
 import Error from '@/components/Error';
-import { Button, Col, Row, Modal, List, Popconfirm, Collapse } from 'antd';
+import { Button, Modal, List, Popconfirm, Collapse } from 'antd';
 import DogSelector from '@/components/admin/DogSelector';
 import firebase from 'firebase/app';
 
