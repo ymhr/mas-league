@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
+import 'firebase/functions';
 import { initializeFirebase } from 'react-firestore-connect';
 
 var config = {
@@ -20,7 +21,7 @@ const firestore = firebase.firestore();
 
 firestore
 	.enablePersistence({ experimentalTabSynchronization: true })
-	.catch((err) => {
+	.catch(err => {
 		if (err.code === 'failed-precondition') {
 			console.error('Multiple tabs open');
 		} else if (err.code === 'unimplemented') {

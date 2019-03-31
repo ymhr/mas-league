@@ -68,7 +68,7 @@ export default function LogPoints({ match }) {
 						<List.Item>
 							{data.showName} - {data.grade}{' '}
 							{data.gradedOrCombined} - placed {data.place} (
-							{data.league})
+							{data.leagueName}, <em>{data.leagueSport}</em>)
 							<Button
 								icon="edit"
 								shape="circle"

@@ -15,13 +15,14 @@ function RunForm({ form, doc, dog, run, onSave }) {
 
 	function submit(e) {
 		e.preventDefault();
-		form.validateFields((err, values) => {
+		form.validateFields(async (err, values) => {
 			if (!err) {
-				const db = firebase
-					.firestore()
-					.collection(`dogs/${dogId}/runs`);
+				const addRun = firebase.functions().httpsCallable('addRun');
+				// const db = firebase
+				// 	.firestore()
+				// 	.collection(`dogs/${dogId}/runs`);
 
-				const docToUse = doc && doc.id ? db.doc(doc.id) : db.doc();
+				// const docToUse = doc && doc.id ? db.doc(doc.id) : db.doc();
 
 				const data = {
 					date: values['date'].format(),
@@ -32,13 +33,22 @@ function RunForm({ form, doc, dog, run, onSave }) {
 					showName: values.showName,
 					grade: values.grade,
 					gradedOrCombined: values.gradedOrCombined,
-					type: values.type
+					type: values.type,
+					docId: (doc && doc.id) || null,
+					dogId
 				};
+				console.log(data);
+				// if (doc) {
+				// 	docToUse.update(data);
+				// } else {
+				// 	docToUse.set(data);
+				// }
 
-				if (doc) {
-					docToUse.update(data);
-				} else {
-					docToUse.set(data);
+				try {
+					const success = await addRun(data);
+					console.log('successfully added run', success);
+				} catch (e) {
+					console.error(e);
 				}
 
 				form.resetFields();
