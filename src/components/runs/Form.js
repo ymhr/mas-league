@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, DatePicker, Button, Select } from 'antd';
+import { Form, Input, DatePicker, Button, Select, message } from 'antd';
 import firebase from 'firebase/app';
 import useReactRouter from 'use-react-router';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -12,11 +12,13 @@ function RunForm({ form, doc, dog, run, onSave }) {
 	const { match } = useReactRouter();
 	const { user } = useAuthState(firebase.auth());
 	const { dogId } = match.params;
+	const [loading, setLoading] = React.useState(false);
 
 	function submit(e) {
 		e.preventDefault();
 		form.validateFields(async (err, values) => {
 			if (!err) {
+				setLoading(true);
 				const addRun = firebase.functions().httpsCallable('addRun');
 				// const db = firebase
 				// 	.firestore()
@@ -37,18 +39,15 @@ function RunForm({ form, doc, dog, run, onSave }) {
 					docId: (doc && doc.id) || null,
 					dogId
 				};
-				console.log(data);
-				// if (doc) {
-				// 	docToUse.update(data);
-				// } else {
-				// 	docToUse.set(data);
-				// }
 
 				try {
 					const success = await addRun(data);
 					console.log('successfully added run', success);
 				} catch (e) {
 					console.error(e);
+					message.error('Saving your run failed, please try again');
+				} finally {
+					setLoading(false);
 				}
 
 				form.resetFields();
@@ -91,7 +90,7 @@ function RunForm({ form, doc, dog, run, onSave }) {
 							message: 'You must select a league.'
 						}
 					],
-					initialValue: data.type
+					initialValue: data.league
 				})(
 					<Select onChange={handleLeagueChange}>
 						{dogLeagues.map(([id, data]) => {
@@ -198,7 +197,7 @@ function RunForm({ form, doc, dog, run, onSave }) {
 					initialValue: data.description
 				})(<TextArea />)}
 			</Form.Item>
-			<Button block htmlType="submit">
+			<Button block htmlType="submit" loading={loading}>
 				Save
 			</Button>
 		</Form>

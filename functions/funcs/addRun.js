@@ -2,6 +2,7 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
 module.exports = functions.https.onCall(async (postData, context) => {
+	console.log(postData);
 	const db = admin.firestore();
 	const docId = postData.docId;
 	const data = { ...postData };
