@@ -1,5 +1,6 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const telegraf = require('telegraf');
 
 admin.initializeApp();
 
@@ -7,8 +8,15 @@ admin.initializeApp();
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
 
-exports.fillOutUsersProfile = functions.auth.user().onCreate(async user => {
+function sendTelegramMessage(content) {
+	const bot = new telegraf.Telegram(functions.config().bot.token);
+	return bot.sendMessage(functions.config().bot.chat, content);
+}
+
+exports.fillOutUsersProfile = functions.auth.user().onCreate(async (user) => {
 	const db = admin.firestore();
+
+	sendTelegramMessage('New user signed up');
 
 	// const names = user.displayName.split(' ');
 	// const firstName = names[0] || null;
