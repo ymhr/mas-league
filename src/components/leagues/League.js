@@ -2,9 +2,14 @@ import React, { useState } from 'react';
 import { useDoc } from '@/hooks/firebase';
 import Loading from '@/components/Loading';
 import Error from '@/components/Error';
-import { Button, Modal, List, Popconfirm, Collapse } from 'antd';
+import { Button, Modal, List, Popconfirm, Collapse, Switch } from 'antd';
 import DogSelector from '@/components/admin/DogSelector';
 import firebase from 'firebase/app';
+import styled from 'styled-components';
+
+const FloatRight = styled.div`
+	float: right;
+`;
 
 function Dog({ id, grade, remove }) {
 	const { loading, error, value } = useDoc('dogs', id);
@@ -30,13 +35,9 @@ function Dog({ id, grade, remove }) {
 
 export default function League({ doc }) {
 	const [modalOpen, setModalOpen] = useState(false);
-	// const { loading, error, value } = useDoc('leagues', doc.id);
-
-	// if (loading || error) return <Loading />;
 
 	const data = doc.data();
 	const dogs = (data && data.dogs && Object.entries(data.dogs)) || [];
-	// const details = (data && data.dogs && Object.values(data.dogs)) || [];
 
 	function openModal() {
 		setModalOpen(true);
@@ -75,12 +76,29 @@ export default function League({ doc }) {
 			.update({ dogs: leagueDogs });
 	}
 
+	function toggleOpen(state, e) {
+		e.stopPropagation();
+		firebase
+			.firestore()
+			.collection('leagues')
+			.doc(doc.id)
+			.update({ open: state });
+	}
+
 	return (
 		<Collapse>
 			<Collapse.Panel
 				header={
 					<h2>
 						{data.name} ({data.sport})
+						<FloatRight>
+							<Switch
+								unCheckedChildren="Closed"
+								checkedChildren="Open"
+								checked={data.open}
+								onChange={toggleOpen}
+							/>
+						</FloatRight>
 					</h2>
 				}
 			>
