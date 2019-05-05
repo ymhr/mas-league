@@ -1,9 +1,10 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const {sendTelegramMessage} = require('./telegram');
 
 module.exports = functions.auth.user().onCreate(async user => {
 	const db = admin.firestore();
-
+	
 	// const names = user.displayName.split(' ');
 	// const firstName = names[0] || null;
 	// const lastName = names[names.length - 1] || null;
@@ -31,4 +32,6 @@ module.exports = functions.auth.user().onCreate(async user => {
 			photoUrl
 		});
 	}
+
+	sendTelegramMessage('New user signed up');
 });
