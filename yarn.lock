@@ -9541,10 +9541,10 @@ use-force-update@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/use-force-update/-/use-force-update-1.0.4.tgz#7e9b55b32b7eb947a2187e5c87e047c7f6c4481b"
 
-use-react-router@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/use-react-router/-/use-react-router-1.0.5.tgz#509d930ad1110f25ff97a88c96c104487f85760f"
-  integrity sha512-huk5DhGio0RYjCngZ+DyTOQ4NqC+hsZ6N78KABkgT6Y2BSJYQkBpqob3gxZBlt+h7Q7YMkH5QZo7mYIW14jhOg==
+use-react-router@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/use-react-router/-/use-react-router-1.0.6.tgz#7ca262482fb679388fbfaaaab3a4c60596d0b0de"
+  integrity sha512-8ASuHrmHpWbzyoMSlHyxgfWcTq/JcEn9k770vGtAIGjQGiODxEKi+WA2n347d+QLqQ6Y4poxJQJWnEkebxzmnw==
   dependencies:
     use-force-update "^1.0.4"
 
