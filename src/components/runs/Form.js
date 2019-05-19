@@ -4,6 +4,24 @@ import firebase from 'firebase/app';
 import useReactRouter from 'use-react-router';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import moment from 'moment';
+import posed, { PoseGroup } from 'react-pose';
+
+const ExtraFields = posed.div({
+	enter: {
+		y: 0,
+		opacity: 1,
+		delay: 300,
+		transition: {
+			y: { type: 'spring', stiffness: 1000, dampning: 15 },
+			default: { duration: 300 }
+		}
+	},
+	exit: {
+		y: 50,
+		opacity: 0,
+		transition: { duration: 150 }
+	}
+});
 
 const { TextArea } = Input;
 
@@ -13,6 +31,14 @@ function RunForm({ form, doc, dog, run, onSave }) {
 	const { user } = useAuthState(firebase.auth());
 	const { dogId } = match.params;
 	const [loading, setLoading] = React.useState(false);
+	const [sport, setSport] = React.useState('');
+
+	const sportSpecificFields = {
+		agility: React.lazy(() => import('@/components/runs/sports/Agility')),
+		flyball: React.lazy(() => import('@/components/runs/sports/Flyball'))
+	};
+
+	const SpecificFields = sportSpecificFields[sport] || null;
 
 	function submit(e) {
 		e.preventDefault();
@@ -20,11 +46,6 @@ function RunForm({ form, doc, dog, run, onSave }) {
 			if (!err) {
 				setLoading(true);
 				const addRun = firebase.functions().httpsCallable('addRun');
-				// const db = firebase
-				// 	.firestore()
-				// 	.collection(`dogs/${dogId}/runs`);
-
-				// const docToUse = doc && doc.id ? db.doc(doc.id) : db.doc();
 
 				const data = {
 					date: values['date'].format(),
@@ -64,8 +85,12 @@ function RunForm({ form, doc, dog, run, onSave }) {
 	const dogLeagues = Object.entries(dogData.leagues);
 
 	function handleLeagueChange(e) {
-		console.log(e);
-		console.log(form);
+		console.log(form.getFieldValue('keys'));
+		const selectedLeague = dogLeagues.find(
+			([leagueId, data]) => leagueId === e
+		);
+
+		setSport(selectedLeague[1].sport);
 	}
 
 	return (
@@ -81,7 +106,6 @@ function RunForm({ form, doc, dog, run, onSave }) {
 					initialValue: data.showName
 				})(<Input />)}
 			</Form.Item>
-
 			<Form.Item label="League">
 				{getFieldDecorator('league', {
 					rules: [
@@ -93,6 +117,7 @@ function RunForm({ form, doc, dog, run, onSave }) {
 					initialValue: data.league
 				})(
 					<Select onChange={handleLeagueChange}>
+						<Select.Option key="none" value={null} />
 						{dogLeagues.map(([id, data]) => {
 							return (
 								<Select.Option key={id} value={id}>
@@ -103,54 +128,20 @@ function RunForm({ form, doc, dog, run, onSave }) {
 					</Select>
 				)}
 			</Form.Item>
-
-			<Form.Item label="Class grade">
-				{getFieldDecorator('grade', {
-					rules: [
-						{
-							required: true,
-							message: 'What grade was the class?'
-						}
-					],
-					initialValue: data.grade
-				})(<Input />)}
-			</Form.Item>
-
-			<Form.Item label="Class type">
-				{getFieldDecorator('type', {
-					rules: [
-						{
-							required: true,
-							message: 'What type of class was it?'
-						}
-					],
-					initialValue: data.type
-				})(
-					<Select>
-						<Select.Option value="agility">Agility</Select.Option>
-						<Select.Option value="jumping">Jumping</Select.Option>
-						<Select.Option value="special">Special</Select.Option>
-					</Select>
-				)}
-			</Form.Item>
-
-			<Form.Item label="Graded or combined">
-				{getFieldDecorator('gradedOrCombined', {
-					rules: [
-						{
-							required: true,
-							message: 'Graded or combined?'
-						}
-					],
-					initialValue: data.gradedOrCombined
-				})(
-					<Select>
-						<Select.Option value="graded">Graded</Select.Option>
-						<Select.Option value="combined">Combined</Select.Option>
-					</Select>
-				)}
-			</Form.Item>
-
+			<div>
+				{/* This is where sport-specific fields go, if they exist */}
+				{/* The custom fields are loading, but their data is not bound, and the validation is not working */}
+				{/* https://ant.design/components/form/#components-form-demo-dynamic-form-item */}
+				<React.Suspense fallback={<div>Loading...</div>}>
+					<PoseGroup>
+						{SpecificFields && (
+							<ExtraFields key="fields">
+								<SpecificFields form={form} data={data} />
+							</ExtraFields>
+						)}
+					</PoseGroup>
+				</React.Suspense>
+			</div>
 			<Form.Item label="Date">
 				{getFieldDecorator('date', {
 					rules: [
@@ -162,7 +153,6 @@ function RunForm({ form, doc, dog, run, onSave }) {
 					initialValue: moment(data.date)
 				})(<DatePicker format="YYYY-MM-DD" />)}
 			</Form.Item>
-
 			<Form.Item label="Place">
 				{getFieldDecorator('place', {
 					rules: [
@@ -191,7 +181,6 @@ function RunForm({ form, doc, dog, run, onSave }) {
 					</Select>
 				)}
 			</Form.Item>
-
 			<Form.Item label="Description">
 				{getFieldDecorator('description', {
 					initialValue: data.description
