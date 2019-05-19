@@ -20,7 +20,7 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 const firestore = firebase.firestore();
 
 firestore
-	.enablePersistence({ experimentalTabSynchronization: true })
+	.enablePersistence({ synchronizeTabs: true })
 	.catch(err => {
 		if (err.code === 'failed-precondition') {
 			console.error('Multiple tabs open');
