@@ -1,5 +1,4 @@
 import React from 'react';
-import currentLeague from '@/utils/currentLeague';
 import styled from 'styled-components';
 
 const BorderedTable = styled.table`
@@ -10,8 +9,6 @@ const BorderedTable = styled.table`
 `;
 
 export default function() {
-	const leagueName = currentLeague();
-
 	return (
 		<>
 			<h1>Welcome to the MAS League!</h1>
@@ -24,8 +21,8 @@ export default function() {
 				agility in the UK. To join it is £4 per dog.
 			</p>
 			<p>
-				The league will run from 01/01/{leagueName} until 20/12/
-				{leagueName}. All shows and placings count, including special
+				The league will run from the first of January until the 20th of
+				December. All shows and placings count, including special
 				classes.
 			</p>
 

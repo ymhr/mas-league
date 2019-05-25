@@ -1,10 +1,29 @@
 import React from 'react';
-import { Form, Input, DatePicker, Button, Select } from 'antd';
+import { Form, Input, DatePicker, Button, Select, message } from 'antd';
 import firebase from 'firebase/app';
 import useReactRouter from 'use-react-router';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import moment from 'moment';
-import currentLeague from '@/utils/currentLeague';
+import posed, { PoseGroup } from 'react-pose';
+import AgilityFields from '@/components/runs/sports/Agility';
+import FlyballFields from '@/components/runs/sports/Flyball';
+
+const ExtraFields = posed.div({
+	enter: {
+		y: 0,
+		opacity: 1,
+		delay: 300,
+		transition: {
+			y: { type: 'spring', stiffness: 1000, dampning: 15 },
+			default: { duration: 300 }
+		}
+	},
+	exit: {
+		y: 50,
+		opacity: 0,
+		transition: { duration: 150 }
+	}
+});
 
 const { TextArea } = Input;
 
@@ -12,35 +31,42 @@ function RunForm({ form, doc, dog, run, onSave }) {
 	const { getFieldDecorator } = form;
 	const { match } = useReactRouter();
 	const { user } = useAuthState(firebase.auth());
-
 	const { dogId } = match.params;
+	const [loading, setLoading] = React.useState(false);
+	const [sport, setSport] = React.useState('');
+
+	const sportSpecificFields = {
+		agility: AgilityFields,
+		flyball: FlyballFields
+	};
+
+	const SpecificFields = sportSpecificFields[sport] || null;
 
 	function submit(e) {
 		e.preventDefault();
-		form.validateFields((err, values) => {
+		form.validateFields(async (err, values) => {
 			if (!err) {
-				const db = firebase
-					.firestore()
-					.collection(`dogs/${dogId}/runs`);
-
-				const docToUse = doc && doc.id ? db.doc(doc.id) : db.doc();
+				setLoading(true);
+				const addRun = firebase.functions().httpsCallable('addRun');
 
 				const data = {
+					...values,
 					date: values['date'].format(),
 					description: values.description || '',
 					uid: user.uid,
-					league: docToUse.league || currentLeague(),
-					place: values.place,
-					showName: values.showName,
-					grade: values.grade,
-					gradedOrCombined: values.gradedOrCombined,
-					type: values.type
+					docId: (doc && doc.id) || null,
+					dogId
 				};
 
-				if (doc) {
-					docToUse.update(data);
-				} else {
-					docToUse.set(data);
+				console.log(data);
+				try {
+					const success = await addRun(data);
+					console.log('successfully added run', success);
+				} catch (e) {
+					console.error(e);
+					message.error('Saving your run failed, please try again');
+				} finally {
+					setLoading(false);
 				}
 
 				form.resetFields();
@@ -52,6 +78,30 @@ function RunForm({ form, doc, dog, run, onSave }) {
 
 	let data = {};
 	if (doc) data = doc.data();
+
+	const dogData = dog.value.data();
+	const dogLeagues = Object.entries(dogData.leagues);
+
+	React.useEffect(() => {
+		if (data.league) {
+			const selectedLeague = dogLeagues.find(
+				([leagueId]) => leagueId === data.league
+			);
+
+			if (selectedLeague && selectedLeague[1]) {
+				setSport(selectedLeague[1].sport);
+			}
+		}
+	}, [data.league, dogLeagues]);
+
+	function handleLeagueChange(e) {
+		const selectedLeague = dogLeagues.find(
+			([leagueId, data]) => leagueId === e
+		);
+		if (selectedLeague && selectedLeague[1]) {
+			setSport(selectedLeague[1].sport);
+		}
+	}
 
 	return (
 		<Form onSubmit={submit} layout="vertical">
@@ -66,54 +116,44 @@ function RunForm({ form, doc, dog, run, onSave }) {
 					initialValue: data.showName
 				})(<Input />)}
 			</Form.Item>
-
-			<Form.Item label="Class grade">
-				{getFieldDecorator('grade', {
+			<Form.Item label="League">
+				{getFieldDecorator('league', {
 					rules: [
 						{
 							required: true,
-							message: 'What grade was the class?'
+							message: 'You must select a league.'
 						}
 					],
-					initialValue: data.grade
-				})(<Input />)}
-			</Form.Item>
-
-			<Form.Item label="Class type">
-				{getFieldDecorator('type', {
-					rules: [
-						{
-							required: true,
-							message: 'What type of class was it?'
-						}
-					],
-					initialValue: data.type
+					initialValue: data.league
 				})(
-					<Select>
-						<Select.Option value="agility">Agility</Select.Option>
-						<Select.Option value="jumping">Jumping</Select.Option>
-						<Select.Option value="special">Special</Select.Option>
+					<Select onChange={handleLeagueChange}>
+						<Select.Option key="none" value={null} />
+						{dogLeagues.map(([id, data]) => {
+							return (
+								<Select.Option key={id} value={id}>
+									{data.name} ({data.sport})
+								</Select.Option>
+							);
+						})}
 					</Select>
 				)}
 			</Form.Item>
-
-			<Form.Item label="Graded or combined">
-				{getFieldDecorator('gradedOrCombined', {
-					rules: [
-						{
-							required: true,
-							message: 'Graded or combined?'
-						}
-					],
-					initialValue: data.gradedOrCombined
-				})(
-					<Select>
-						<Select.Option value="graded">Graded</Select.Option>
-						<Select.Option value="combined">Combined</Select.Option>
-					</Select>
-				)}
-			</Form.Item>
-
+			<div>
+				{/* This is where sport-specific fields go, if they exist */}
+				{/* The custom fields are loading, but their data is not bound, and the validation is not working */}
+				{/* https://ant.design/components/form/#components-form-demo-dynamic-form-item */}
+				<PoseGroup>
+					{SpecificFields && (
+						<ExtraFields key="fields">
+							<SpecificFields
+								form={form}
+								getFieldDecorator={getFieldDecorator}
+								data={data}
+							/>
+						</ExtraFields>
+					)}
+				</PoseGroup>
+			</div>
 			<Form.Item label="Date">
 				{getFieldDecorator('date', {
 					rules: [
@@ -125,7 +165,6 @@ function RunForm({ form, doc, dog, run, onSave }) {
 					initialValue: moment(data.date)
 				})(<DatePicker format="YYYY-MM-DD" />)}
 			</Form.Item>
-
 			<Form.Item label="Place">
 				{getFieldDecorator('place', {
 					rules: [
@@ -154,13 +193,12 @@ function RunForm({ form, doc, dog, run, onSave }) {
 					</Select>
 				)}
 			</Form.Item>
-
 			<Form.Item label="Description">
 				{getFieldDecorator('description', {
 					initialValue: data.description
 				})(<TextArea />)}
 			</Form.Item>
-			<Button block htmlType="submit">
+			<Button block htmlType="submit" loading={loading}>
 				Save
 			</Button>
 		</Form>

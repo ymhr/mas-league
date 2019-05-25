@@ -21,7 +21,7 @@ export function useDoc(collection, id) {
 				setLoading(false);
 			});
 		}
-	}, [collection, id]);
+	}, [collection, db, id]);
 
 	return { loading, doc, value };
 }

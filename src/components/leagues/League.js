@@ -2,9 +2,14 @@ import React, { useState } from 'react';
 import { useDoc } from '@/hooks/firebase';
 import Loading from '@/components/Loading';
 import Error from '@/components/Error';
-import { Button, Col, Row, Modal, List, Popconfirm } from 'antd';
+import { Button, Modal, List, Popconfirm, Collapse, Switch } from 'antd';
 import DogSelector from '@/components/admin/DogSelector';
 import firebase from 'firebase/app';
+import styled from 'styled-components';
+
+const FloatRight = styled.div`
+	float: right;
+`;
 
 function Dog({ id, grade, remove }) {
 	const { loading, error, value } = useDoc('dogs', id);
@@ -30,14 +35,9 @@ function Dog({ id, grade, remove }) {
 
 export default function League({ doc }) {
 	const [modalOpen, setModalOpen] = useState(false);
-	// const { loading, error, value } = useDoc('leagues', doc.id);
-
-	// if (loading || error) return <Loading />;
 
 	const data = doc.data();
-	console.log(data);
 	const dogs = (data && data.dogs && Object.entries(data.dogs)) || [];
-	// const details = (data && data.dogs && Object.values(data.dogs)) || [];
 
 	function openModal() {
 		setModalOpen(true);
@@ -76,46 +76,60 @@ export default function League({ doc }) {
 			.update({ dogs: leagueDogs });
 	}
 
+	function toggleOpen(state, e) {
+		e.stopPropagation();
+		firebase
+			.firestore()
+			.collection('leagues')
+			.doc(doc.id)
+			.update({ open: state });
+	}
+
 	return (
-		<>
-			<Row>
-				<Col xs={24} sm={12}>
-					<h2>{doc.id}</h2>
-				</Col>
-				<Col xs={24} sm={12}>
-					<Button type="primary" icon="plus" onClick={openModal}>
-						Add dogs
-					</Button>
-				</Col>
-			</Row>
-			<List
-				dataSource={dogs}
-				renderItem={([dog, details]) => (
-					<Dog
-						id={dog}
-						grade={details.grade}
-						remove={removeDogFromLeague}
-					/>
-				)}
-			/>
-			{/* <ul>
-				{dogs.map((dog, i) => (
-					<Dog
-						key={dog}
-						id={dog}
-						grade={details[i].grade}
-						remove={removeDogFromLeague}
-					/>
-				))}
-			</ul> */}
-			<Modal
-				title="Select a dog"
-				visible={modalOpen}
-				onOk={closeModal}
-				onCancel={closeModal}
+		<Collapse>
+			<Collapse.Panel
+				header={
+					<h2>
+						{data.name} ({data.sport})
+						<FloatRight>
+							<Switch
+								unCheckedChildren="Closed"
+								checkedChildren="Open"
+								checked={data.open}
+								onChange={toggleOpen}
+							/>
+						</FloatRight>
+					</h2>
+				}
 			>
-				<DogSelector leagueId={doc.id} onSelect={onSelect} />
-			</Modal>
-		</>
+				<Button
+					type="primary"
+					icon="plus"
+					onClick={openModal}
+					block
+					disabled={!data.open}
+				>
+					Add dogs
+				</Button>
+				<List
+					dataSource={dogs}
+					renderItem={([dog, details]) => (
+						<Dog
+							id={dog}
+							grade={details.grade}
+							remove={removeDogFromLeague}
+						/>
+					)}
+				/>
+				<Modal
+					title="Select a dog"
+					visible={modalOpen}
+					onOk={closeModal}
+					onCancel={closeModal}
+				>
+					<DogSelector leagueId={doc.id} onSelect={onSelect} />
+				</Modal>
+			</Collapse.Panel>
+		</Collapse>
 	);
 }
