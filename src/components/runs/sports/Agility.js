@@ -1,8 +1,7 @@
 import React from 'react';
 import { Form, Input, Select } from 'antd';
 
-export default function AgilityFields({ form, data }) {
-	const { getFieldDecorator } = form;
+export default function AgilityFields({ form, getFieldDecorator, data }) {
 	return (
 		<>
 			<Form.Item label="Class grade">

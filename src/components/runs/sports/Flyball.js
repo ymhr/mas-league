@@ -1,8 +1,7 @@
 import React from 'react';
 import { Form, Input } from 'antd';
 
-export default function AgilityFields({ form, data }) {
-	const { getFieldDecorator } = form;
+export default function FlyballFields({ form, getFieldDecorator, data }) {
 	return (
 		<>
 			<Form.Item label="Time">
