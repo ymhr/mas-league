@@ -8010,10 +8010,10 @@ react-firestore-connect@^2.0.0:
     babel-polyfill "6.26.0"
     hoist-non-react-statics "3.0.1"
 
-react-hot-loader@^4.8.4:
-  version "4.8.4"
-  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.8.4.tgz#357ba342e367fd42d6a870a9c0601c23fa0730c6"
-  integrity sha512-O98btZXcm24ZgP+aPBD0W9N+GEnkOg6vlLEy/IMZ53u3K/dGqO0I/RU4qrmQzE+wMDLpwNo5TwxaAjVw9Y+IBA==
+react-hot-loader@^4.8.8:
+  version "4.8.8"
+  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.8.8.tgz#71e3c7ba301556aa24c52cef2f6ed0af82395eea"
+  integrity sha512-58bgeS7So8V93MhhnKogbraor8xdrTncil+b6IoIXkTIr3blJNAE7bU4tn/iJvy2J7rjxQmKFRaxKrWdKUZpqg==
   dependencies:
     fast-levenshtein "^2.0.6"
     global "^4.3.0"
