@@ -5,6 +5,8 @@ import useReactRouter from 'use-react-router';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import moment from 'moment';
 import posed, { PoseGroup } from 'react-pose';
+import AgilityFields from '@/components/runs/sports/Agility';
+import FlyballFields from '@/components/runs/sports/Flyball';
 
 const ExtraFields = posed.div({
 	enter: {
@@ -34,8 +36,8 @@ function RunForm({ form, doc, dog, run, onSave }) {
 	const [sport, setSport] = React.useState('');
 
 	const sportSpecificFields = {
-		agility: React.lazy(() => import('@/components/runs/sports/Agility')),
-		flyball: React.lazy(() => import('@/components/runs/sports/Flyball'))
+		agility: AgilityFields,
+		flyball: FlyballFields
 	};
 
 	const SpecificFields = sportSpecificFields[sport] || null;
@@ -48,19 +50,15 @@ function RunForm({ form, doc, dog, run, onSave }) {
 				const addRun = firebase.functions().httpsCallable('addRun');
 
 				const data = {
+					...values,
 					date: values['date'].format(),
 					description: values.description || '',
 					uid: user.uid,
-					league: values.league,
-					place: values.place,
-					showName: values.showName,
-					grade: values.grade,
-					gradedOrCombined: values.gradedOrCombined,
-					type: values.type,
 					docId: (doc && doc.id) || null,
 					dogId
 				};
 
+				console.log(data);
 				try {
 					const success = await addRun(data);
 					console.log('successfully added run', success);
@@ -84,13 +82,25 @@ function RunForm({ form, doc, dog, run, onSave }) {
 	const dogData = dog.value.data();
 	const dogLeagues = Object.entries(dogData.leagues);
 
+	React.useEffect(() => {
+		if (data.league) {
+			const selectedLeague = dogLeagues.find(
+				([leagueId]) => leagueId === data.league
+			);
+
+			if (selectedLeague && selectedLeague[1]) {
+				setSport(selectedLeague[1].sport);
+			}
+		}
+	}, [data.league, dogLeagues]);
+
 	function handleLeagueChange(e) {
-		console.log(form.getFieldValue('keys'));
 		const selectedLeague = dogLeagues.find(
 			([leagueId, data]) => leagueId === e
 		);
-
-		setSport(selectedLeague[1].sport);
+		if (selectedLeague && selectedLeague[1]) {
+			setSport(selectedLeague[1].sport);
+		}
 	}
 
 	return (
@@ -132,15 +142,17 @@ function RunForm({ form, doc, dog, run, onSave }) {
 				{/* This is where sport-specific fields go, if they exist */}
 				{/* The custom fields are loading, but their data is not bound, and the validation is not working */}
 				{/* https://ant.design/components/form/#components-form-demo-dynamic-form-item */}
-				<React.Suspense fallback={<div>Loading...</div>}>
-					<PoseGroup>
-						{SpecificFields && (
-							<ExtraFields key="fields">
-								<SpecificFields form={form} data={data} />
-							</ExtraFields>
-						)}
-					</PoseGroup>
-				</React.Suspense>
+				<PoseGroup>
+					{SpecificFields && (
+						<ExtraFields key="fields">
+							<SpecificFields
+								form={form}
+								getFieldDecorator={getFieldDecorator}
+								data={data}
+							/>
+						</ExtraFields>
+					)}
+				</PoseGroup>
 			</div>
 			<Form.Item label="Date">
 				{getFieldDecorator('date', {
