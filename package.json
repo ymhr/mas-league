@@ -17,7 +17,7 @@
 		"react-router-dom": "^5.0.0",
 		"react-scripts": "3.0.1",
 		"styled-components": "^4.2.0",
-		"use-react-router": "^1.0.5"
+		"use-react-router": "^1.0.7"
 	},
 	"devDependencies": {
 		"craco-plugin-react-hot-reload": "^0.0.3",
