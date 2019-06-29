@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import Loading from '@/components/Loading';
 import AuthRoute from '@/components/AuthRoute';
 import AdminRoute from '@/components/AdminRoute';
+import Container from '@/components/layout/Container';
 
 const Admin = React.lazy(() => import('@/routes/Admin'));
 const Home = React.lazy(() => import('@/routes/Home'));
@@ -18,17 +19,13 @@ const Onboard = React.lazy(() => import('@/routes/Onboard'));
 const LogPoints = React.lazy(() => import('@/routes/LogPoints'));
 const Privacy = React.lazy(() => import('@/routes/Privacy'));
 
-const Container = styled.div`
-	padding: 20px;
-`;
-
 function App() {
 	return (
 		<Router>
 			<div className="app">
 				<Header />
 				<React.Suspense fallback={Loading}>
-					<Container>
+					<Container mobilePadding="20px">
 						<Switch>
 							<Route path="/" exact component={Home} />
 							<Route path="/leagues" component={Leagues} />

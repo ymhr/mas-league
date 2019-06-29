@@ -5,6 +5,7 @@ import LoginButton from '@/components/layout/LoginButton';
 import { Row, Col, Menu, Affix } from 'antd';
 import useRouter from 'use-react-router';
 import AdminButton from '@/components/layout/AdminButton';
+import Container from './Container';
 
 const HeaderBar = styled.header`
 	width: 100%;
@@ -12,8 +13,10 @@ const HeaderBar = styled.header`
 `;
 
 const H1 = styled.h1`
-	padding: 0 20px;
-	margin: 20px 0;
+	/* padding-top: 10px;
+	margin: 0 0 20px 0; */
+	margin: 0;
+	padding: 0;
 	font-family: 'Staatliches', cursive;
 `;
 
@@ -22,41 +25,38 @@ function Header() {
 
 	return (
 		<HeaderBar>
-			<Row>
-				<Col xs={24}>
-					<H1>MAS Agility League</H1>
-				</Col>
-			</Row>
-			<Row>
-				<Col xs={24}>
-					<Affix offsetTop={0}>
-						<Menu
-							mode="horizontal"
-							selectedKeys={[location.pathname]}
-						>
-							<Menu.Item key="/">
-								<Link to="/">Home</Link>
-							</Menu.Item>
+			<Container mobilePadding="20px">
+				<H1>MAS Agility League</H1>
+			</Container>
+			<Container mobilePadding="0">
+				<Affix offsetTop={0}>
+					<Menu
+						mode="horizontal"
+						selectedKeys={[location.pathname]}
+						style={{ backgroundColor: '#eee' }}
+					>
+						<Menu.Item key="/">
+							<Link to="/">Home</Link>
+						</Menu.Item>
 
-							<Menu.Item key="/leagues">
-								<Link to="/leagues">Tables</Link>
-							</Menu.Item>
-							<Menu.Item key="/dogs">
-								<Link to="/dogs">Your dogs</Link>
-							</Menu.Item>
-							<Menu.Item key="/profile">
-								<Link to="/profile">Profile</Link>
-							</Menu.Item>
-							<Menu.Item key="/login">
-								<LoginButton />
-							</Menu.Item>
-							<Menu.Item key="/admin">
-								<AdminButton />
-							</Menu.Item>
-						</Menu>
-					</Affix>
-				</Col>
-			</Row>
+						<Menu.Item key="/leagues">
+							<Link to="/leagues">Tables</Link>
+						</Menu.Item>
+						<Menu.Item key="/dogs">
+							<Link to="/dogs">Your dogs</Link>
+						</Menu.Item>
+						<Menu.Item key="/profile">
+							<Link to="/profile">Profile</Link>
+						</Menu.Item>
+						<Menu.Item key="/login">
+							<LoginButton />
+						</Menu.Item>
+						<Menu.Item key="/admin">
+							<AdminButton />
+						</Menu.Item>
+					</Menu>
+				</Affix>
+			</Container>
 		</HeaderBar>
 	);
 }

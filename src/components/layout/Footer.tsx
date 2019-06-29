@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Row, Col } from 'antd';
+import Container from './Container';
 
 const Bar = styled.footer`
 	padding: 10px;
@@ -16,18 +17,20 @@ const Bar = styled.footer`
 export default function Footer() {
 	return (
 		<Bar>
-			<Row>
-				<Col xs={24} sm={8}>
-					Copyright &copy; 2019
-				</Col>
-				<Col xs={24} sm={16}>
-					<ul>
-						<li>
-							<Link to="/privacy">Privacy Policy</Link>
-						</li>
-					</ul>
-				</Col>
-			</Row>
+			<Container mobilePadding="20px">
+				<Row>
+					<Col xs={24} sm={8}>
+						Copyright &copy; 2019
+					</Col>
+					<Col xs={24} sm={16}>
+						<ul>
+							<li>
+								<Link to="/privacy">Privacy Policy</Link>
+							</li>
+						</ul>
+					</Col>
+				</Row>
+			</Container>
 		</Bar>
 	);
 }
