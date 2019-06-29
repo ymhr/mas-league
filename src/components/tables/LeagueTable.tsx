@@ -5,7 +5,13 @@ import Loading from '@/components/Loading';
 import { Table } from 'antd';
 import Error from '@/components/Error';
 
-export default function LeagueTable({ league, minGrade, maxGrade }) {
+interface Props {
+	league: string;
+	minGrade: number;
+	maxGrade: number;
+}
+
+export default function LeagueTable({ league, minGrade, maxGrade }: Props) {
 	const query = firebase
 		.firestore()
 		.collection('dogs')
@@ -16,7 +22,7 @@ export default function LeagueTable({ league, minGrade, maxGrade }) {
 
 	const [value, loading, error] = useCollection(query);
 
-	if (loading) return <Loading />;
+	if (loading || !value) return <Loading />;
 	if (error) return <Error error={error} />;
 
 	let data = value.docs.map((doc) => ({

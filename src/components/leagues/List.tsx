@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
 import League from '@/components/leagues/League';
 import Loading from '@/components/Loading';
-import firebase from 'firebase/app';
+import firebase, { firestore } from 'firebase/app';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { Button, Modal } from 'antd';
 import Form from '@/components/leagues/Form';
 
-export default function List({ form, doc }) {
+interface Props {
+	doc?: firestore.DocumentReference;
+}
+
+export default function List({ doc }: Props) {
 	const [value, loading, error] = useCollection(
 		firebase.firestore().collection('leagues')
 	);
 	const [modalOpen, setModalOpen] = useState(false);
 
-	if (loading || error) return <Loading />;
+	if (loading || error || !value) return <Loading />;
 
 	function toggleModal() {
 		setModalOpen(!modalOpen);

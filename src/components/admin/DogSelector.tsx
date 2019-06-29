@@ -48,7 +48,7 @@ export default function DogSelector({ leagueId, onSelect }: DogSelectorProps) {
 	if (loading || !value) return <Loading />;
 
 	//List all dogs who are not in the 2019 league
-	return value.docs
+	const dogs = value.docs
 		.filter(
 			(doc) =>
 				doc &&
@@ -59,4 +59,6 @@ export default function DogSelector({ leagueId, onSelect }: DogSelectorProps) {
 		.map((doc: firestore.DocumentSnapshot) => (
 			<Dog key={doc.id} doc={doc} click={selected.bind(null, doc)} />
 		));
+
+	return <>{dogs}</>;
 }

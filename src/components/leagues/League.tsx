@@ -4,15 +4,21 @@ import Loading from '@/components/Loading';
 import Error from '@/components/Error';
 import { Button, Modal, List, Popconfirm, Collapse, Switch } from 'antd';
 import DogSelector from '@/components/admin/DogSelector';
-import firebase from 'firebase/app';
+import firebase, { firestore } from 'firebase/app';
 import styled from 'styled-components';
 
 const FloatRight = styled.div`
 	float: right;
 `;
 
-function Dog({ id, grade, remove }) {
-	const { loading, error, value } = useDoc('dogs', id);
+interface DogProps {
+	id: string;
+	grade: Number;
+	remove: (doc: firestore.DocumentSnapshot) => void;
+}
+
+function Dog({ id, grade, remove }: DogProps) {
+	const [value, loading, error] = useDoc('dogs', id);
 
 	if (loading || error || !value) return <Loading />;
 
@@ -33,11 +39,18 @@ function Dog({ id, grade, remove }) {
 	);
 }
 
-export default function League({ doc }) {
+interface LeagueProps {
+	doc: firestore.DocumentSnapshot;
+}
+export default function League({ doc }: LeagueProps) {
 	const [modalOpen, setModalOpen] = useState(false);
 
 	const data = doc.data();
-	const dogs = (data && data.dogs && Object.entries(data.dogs)) || [];
+	const dogs =
+		(data && data.dogs && Object.entries<{ grade: number }>(data.dogs)) ||
+		[];
+
+	if (!data) return <Loading />;
 
 	function openModal() {
 		setModalOpen(true);
@@ -47,9 +60,11 @@ export default function League({ doc }) {
 		setModalOpen(false);
 	}
 
-	function onSelect(dog) {
+	function onSelect(dog: firestore.DocumentSnapshot) {
 		const dogData = dog.data();
 		const leagueData = doc.data();
+
+		if (!dogData || !leagueData) return;
 
 		const entry = { grade: dogData.grade };
 
@@ -62,8 +77,10 @@ export default function League({ doc }) {
 			.update({ dogs: leagueDogs });
 	}
 
-	function removeDogFromLeague(dog) {
+	function removeDogFromLeague(dog: firestore.DocumentSnapshot) {
 		const leagueData = doc.data();
+
+		if (!leagueData) return;
 
 		const leagueDogs = { ...leagueData.dogs };
 
@@ -76,7 +93,7 @@ export default function League({ doc }) {
 			.update({ dogs: leagueDogs });
 	}
 
-	function toggleOpen(state, e) {
+	function toggleOpen(state: boolean, e: MouseEvent) {
 		e.stopPropagation();
 		firebase
 			.firestore()
@@ -88,6 +105,7 @@ export default function League({ doc }) {
 	return (
 		<Collapse>
 			<Collapse.Panel
+				key="id"
 				header={
 					<h2>
 						{data.name} ({data.sport})

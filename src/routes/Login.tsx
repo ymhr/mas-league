@@ -4,21 +4,22 @@ import firebase from 'firebase/app';
 import { Redirect } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Loading from '@/components/Loading';
+import { RouterProps } from 'react-router';
 
 const uiConfig = {
 	signInFlow: 'popup',
 	signInOptions: [
 		firebase.auth.FacebookAuthProvider.PROVIDER_ID,
 		firebase.auth.GoogleAuthProvider.PROVIDER_ID
-	],
-	callbacks: {
-		signInSuccessWithAuthResult: (data) => {
-			//
-		}
-	}
+	]
+	// callbacks: {
+	// 	signInSuccessWithAuthResult: (data) => {
+	// 		//
+	// 	}
+	// }
 };
 
-function Login({ history }) {
+function Login({ history }: RouterProps) {
 	const [user, initialising] = useAuthState(firebase.auth());
 
 	if (initialising) return <Loading />;
