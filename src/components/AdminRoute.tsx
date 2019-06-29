@@ -3,7 +3,12 @@ import { Redirect, Route } from 'react-router-dom';
 import Loading from '@/components/Loading';
 import useIsAdmin from '@/hooks/useIsAdmin';
 
-function AuthRoute({ component: Component, isAllowed, ...props }) {
+interface Props {
+	component: React.ElementType<any>;
+	[x: string]: any;
+}
+
+function AuthRoute({ component: Component, ...props }: Props) {
 	const { isAdmin, error, loading } = useIsAdmin();
 
 	if (loading || error) {

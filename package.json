@@ -5,6 +5,7 @@
 	"dependencies": {
 		"@craco/craco": "5.2.3",
 		"@hot-loader/react-dom": "^16.8.6",
+		"@types/antd": "^1.0.0",
 		"antd": "^3.16.3",
 		"firebase": "6.2.4",
 		"informed": "^2.2.0",
@@ -22,7 +23,10 @@
 		"use-react-router": "^1.0.5"
 	},
 	"devDependencies": {
+		"@types/react": "^16.8.22",
 		"@types/react-dom": "^16.8.4",
+		"@types/react-router-dom": "^4.3.4",
+		"@types/styled-components": "^4.1.16",
 		"craco-plugin-react-hot-reload": "^0.0.3",
 		"prettier": "^1.17.0"
 	},
