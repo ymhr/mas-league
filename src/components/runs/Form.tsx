@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { FormEvent } from 'react';
 import { Form, Input, DatePicker, Button, Select, message } from 'antd';
-import firebase from 'firebase/app';
+import firebase, { firestore } from 'firebase/app';
 import useReactRouter from 'use-react-router';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import moment from 'moment';
 import posed, { PoseGroup } from 'react-pose';
 import AgilityFields from '@/components/runs/sports/Agility';
 import FlyballFields from '@/components/runs/sports/Flyball';
+import { FormComponentProps } from 'antd/lib/form';
+import { WrappedFormUtils } from 'antd/lib/form/Form';
+import Loading from '@/components/Loading';
 
 const ExtraFields = posed.div({
 	enter: {
@@ -27,22 +30,59 @@ const ExtraFields = posed.div({
 
 const { TextArea } = Input;
 
-function RunForm({ form, doc, dog, run, onSave }) {
+interface Props {
+	doc?: firestore.DocumentSnapshot;
+	dog: firestore.DocumentSnapshot;
+	run?: firestore.QueryDocumentSnapshot;
+	onSave: () => void;
+}
+
+export interface SportFieldProps {
+	form: WrappedFormUtils;
+	data: firestore.DocumentData;
+}
+
+function RunForm({ form, doc, dog, run, onSave }: Props & FormComponentProps) {
 	const { getFieldDecorator } = form;
-	const { match } = useReactRouter();
-	const { user } = useAuthState(firebase.auth());
+	const { match } = useReactRouter<{ dogId: string }>();
+	const [user] = useAuthState(firebase.auth());
 	const { dogId } = match.params;
 	const [loading, setLoading] = React.useState(false);
 	const [sport, setSport] = React.useState('');
 
-	const sportSpecificFields = {
+	const sportSpecificFields: {
+		[name: string]: React.FunctionComponent<SportFieldProps>;
+	} = {
 		agility: AgilityFields,
 		flyball: FlyballFields
 	};
 
 	const SpecificFields = sportSpecificFields[sport] || null;
 
-	function submit(e) {
+	let data = (!!doc && doc.data()) || {};
+	let dogData = dog.data();
+
+	const dogLeagues =
+		(dogData &&
+			Object.entries<{ sport: string; name: string }>(dogData.leagues)) ||
+		[];
+
+	React.useEffect(() => {
+		if (!data) return;
+
+		if (data.league) {
+			const selectedLeague = dogLeagues.find(
+				([leagueId]) => !!data && leagueId === data.league
+			);
+
+			if (selectedLeague && selectedLeague[1]) {
+				setSport(selectedLeague[1].sport);
+			}
+		}
+	}, [data, data.league, dogLeagues]);
+
+	function submit(e: FormEvent) {
+		if (!user) return;
 		e.preventDefault();
 		form.validateFields(async (err, values) => {
 			if (!err) {
@@ -76,25 +116,9 @@ function RunForm({ form, doc, dog, run, onSave }) {
 		});
 	}
 
-	let data = {};
-	if (doc) data = doc.data();
+	if (!data || !dogData) return <Loading />;
 
-	const dogData = dog.value.data();
-	const dogLeagues = Object.entries(dogData.leagues);
-
-	React.useEffect(() => {
-		if (data.league) {
-			const selectedLeague = dogLeagues.find(
-				([leagueId]) => leagueId === data.league
-			);
-
-			if (selectedLeague && selectedLeague[1]) {
-				setSport(selectedLeague[1].sport);
-			}
-		}
-	}, [data.league, dogLeagues]);
-
-	function handleLeagueChange(e) {
+	function handleLeagueChange(e: string) {
 		const selectedLeague = dogLeagues.find(
 			([leagueId, data]) => leagueId === e
 		);
@@ -127,7 +151,7 @@ function RunForm({ form, doc, dog, run, onSave }) {
 					initialValue: data.league
 				})(
 					<Select onChange={handleLeagueChange}>
-						<Select.Option key="none" value={null} />
+						<Select.Option key="none" value={undefined} />
 						{dogLeagues.map(([id, data]) => {
 							return (
 								<Select.Option key={id} value={id}>
@@ -145,11 +169,7 @@ function RunForm({ form, doc, dog, run, onSave }) {
 				<PoseGroup>
 					{SpecificFields && (
 						<ExtraFields key="fields">
-							<SpecificFields
-								form={form}
-								getFieldDecorator={getFieldDecorator}
-								data={data}
-							/>
+							<SpecificFields form={form} data={data} />
 						</ExtraFields>
 					)}
 				</PoseGroup>
@@ -205,4 +225,6 @@ function RunForm({ form, doc, dog, run, onSave }) {
 	);
 }
 
-export default Form.create({ name: 'runForm' })(RunForm);
+export default Form.create<Props & FormComponentProps>({ name: 'runForm' })(
+	RunForm
+);

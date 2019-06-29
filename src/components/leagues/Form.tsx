@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { FormEvent } from 'react';
 import { Form, Button, Input, Select, Switch } from 'antd';
 import { types } from '@/utils/sportTypes';
-import firebase from 'firebase/app';
+import firebase, { firestore } from 'firebase/app';
+import { FormComponentProps } from 'antd/lib/form/Form';
 
-function LeagueForm({ form, doc, onSave }) {
+interface Props {
+	doc?: firestore.DocumentReference;
+	onSave: () => void;
+}
+
+function LeagueForm({ form, doc, onSave }: Props & FormComponentProps) {
 	const { getFieldDecorator } = form;
 
-	function submit(e) {
+	function submit(e: FormEvent) {
 		e.preventDefault();
 		form.validateFields((err, values) => {
 			if (!err) {
@@ -55,7 +61,7 @@ function LeagueForm({ form, doc, onSave }) {
 					]
 				})(
 					<Select>
-						{types.map(type => (
+						{types.map((type) => (
 							<Select.Option key={type} value={type}>
 								{type}
 							</Select.Option>
@@ -75,4 +81,6 @@ function LeagueForm({ form, doc, onSave }) {
 	);
 }
 
-export default Form.create({ name: 'leagueForm' })(LeagueForm);
+export default Form.create<Props & FormComponentProps>({ name: 'leagueForm' })(
+	LeagueForm
+);

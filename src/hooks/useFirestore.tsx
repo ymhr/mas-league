@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
+import { firestore } from 'firebase';
 
-function useFirestore(collection, transformResults = null) {
-	const [data, setData] = useState([]);
+function useFirestore<T>(
+	collection: firestore.CollectionReference,
+	transformResults?: (snapshot: firestore.QuerySnapshot) => T
+) {
+	const [data, setData] = useState<firestore.QuerySnapshot | T>();
 	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
+	const [error, setError] = useState<Error>();
 
 	useEffect(() => {
 		const unsubscribe = collection.onSnapshot(
@@ -23,7 +27,7 @@ function useFirestore(collection, transformResults = null) {
 		);
 
 		return unsubscribe;
-	}, []);
+	}, [collection, transformResults]);
 
 	return [data, loading, error];
 }

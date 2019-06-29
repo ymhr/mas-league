@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, FormEvent } from 'react';
 import posed, { PoseGroup } from 'react-pose';
 import styled from 'styled-components';
 import { Button, Form, Input, InputNumber, Icon } from 'antd';
-import firebase from 'firebase/app';
+import firebase, { firestore } from 'firebase/app';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Loading from '@/components/Loading';
-import { withRouter } from 'react-router-dom';
+import { FormComponentProps } from 'antd/lib/form';
+import useRouter from 'use-react-router';
+import Error from '@/components/Error';
 
 const BoxPosed = posed.div({
 	open: {
 		height: 'auto',
 		'background-color': '#eee',
-		// 'box-shadow': '0px 0px 20px 5px rgba(0, 0, 0, 0.3)',
 		'margin-bottom': '20px',
 		position: 'relative',
 		flip: true,
@@ -20,7 +21,6 @@ const BoxPosed = posed.div({
 	closed: {
 		height: 'auto',
 		'background-color': '#fff',
-		// 'box-shadow': '0px 0px 0px 0px rgba(0, 0, 0, 0.0)',
 		'margin-bottom': '0px',
 		position: 'relative',
 		padding: '20px',
@@ -109,24 +109,28 @@ const Overlay = styled(OverlayPosed)`
 	}
 `;
 
-function Dog({ dog, form, history }) {
+interface DogProps {
+	dog?: firestore.QueryDocumentSnapshot;
+	newDoc?: firebase.firestore.DocumentReference;
+}
+
+function Dog({ dog, newDoc, form }: DogProps & FormComponentProps) {
+	const isNew = !!newDoc;
+	const { history } = useRouter();
 	const { getFieldDecorator } = form;
 	const [isOpen, setIsOpen] = useState(false);
-	const [isNew, setIsNew] = useState(false);
-	const { initialising, user } = useAuthState(firebase.auth());
+	const [user, initialising] = useAuthState(firebase.auth());
 
-	if (initialising) return <Loading />;
-
-	let data = {};
-	if (!isNew) {
-		try {
-			data = dog.data();
-		} catch (e) {
-			setIsNew(true);
-		}
+	if (initialising || !user) return <Loading />;
+	if (!dog && !newDoc) {
+		return <Error error="exiting dog AND new dog missing" />;
 	}
 
-	// const { doc: dogDoc } = useDoc('dogs', dog.id);
+	let data: firestore.DocumentData = {};
+	if (!isNew && dog) {
+		const docData = dog.data();
+		if (docData) data = docData;
+	}
 
 	function close() {
 		setIsOpen(false);
@@ -137,13 +141,14 @@ function Dog({ dog, form, history }) {
 		setIsOpen(true);
 	}
 
-	function submit(e) {
+	function submit(e: FormEvent<HTMLElement>) {
 		e.preventDefault();
 		form.validateFields((err, values) => {
+			const id = (dog && dog.id) || (newDoc && newDoc.id);
 			const dogDoc = firebase
 				.firestore()
 				.collection('dogs')
-				.doc(dog.id);
+				.doc(id);
 
 			if (!err) {
 				if (isNew) {
@@ -156,7 +161,8 @@ function Dog({ dog, form, history }) {
 		});
 	}
 
-	function deleteDog(e) {
+	function deleteDog(e: React.MouseEvent<HTMLElement, MouseEvent>) {
+		if (!dog) return;
 		const dogDoc = firebase
 			.firestore()
 			.collection('dogs')
@@ -166,7 +172,8 @@ function Dog({ dog, form, history }) {
 		dogDoc.delete();
 	}
 
-	function goToLogPoints() {
+	function goToLogPoints(): void {
+		if (!dog) return;
 		history.push(`/points/${dog.id}`);
 	}
 
@@ -251,4 +258,4 @@ function Dog({ dog, form, history }) {
 	);
 }
 
-export default withRouter(Form.create({ name: 'dog' })(Dog));
+export default Form.create<DogProps & FormComponentProps>({ name: 'dog' })(Dog);

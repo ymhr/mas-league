@@ -5,8 +5,13 @@ import firebase from 'firebase/app';
 import Loading from '@/components/Loading';
 import { useProfile } from '@/hooks/firebase';
 
-export default function AuthRoute({ component: Component, ...props }) {
-	const { initialising, user } = useAuthState(firebase.auth());
+interface Props {
+	component: React.ElementType<any>;
+	[x: string]: any;
+}
+
+export default function AuthRoute({ component: Component, ...props }: Props) {
+	const [user, initialising] = useAuthState(firebase.auth());
 	const { loading: profileLoading, hasRequiredProfileData } = useProfile();
 
 	return (

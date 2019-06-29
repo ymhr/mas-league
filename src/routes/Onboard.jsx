@@ -4,20 +4,20 @@ import { useProfile } from '@/hooks/firebase';
 import Loading from '@/components/Loading';
 import { Steps, Button } from 'antd';
 import DogForm from '@/components/onboard/DogForm';
+import Error from '@/components/Error';
 
 function Onboard({ getFieldDecorator, history }) {
 	const data = useRef(null);
 
-	const { value, loading, error, hasRequiredProfileData } = useProfile();
+	const { profile, loading, error, hasRequiredProfileData } = useProfile();
 
 	if (error) {
-		console.log(error);
-		return <p>An error occurred</p>;
+		return <Error error={error} />;
 	}
 
-	if (!data || loading || !value) return <Loading />;
+	if (loading || !profile) return <Loading />;
 
-	data.current = value.data() || {};
+	data.current = profile.data() || {};
 
 	const currentStep = hasRequiredProfileData() ? 1 : 0;
 

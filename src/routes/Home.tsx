@@ -8,7 +8,7 @@ const BorderedTable = styled.table`
 	}
 `;
 
-export default function() {
+export default function Home() {
 	return (
 		<>
 			<h1>Welcome to the MAS League!</h1>

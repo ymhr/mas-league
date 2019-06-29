@@ -1,7 +1,9 @@
 import React from 'react';
 import { Form, Input, Select } from 'antd';
+import { SportFieldProps } from '../Form';
 
-export default function AgilityFields({ form, getFieldDecorator, data }) {
+export default function AgilityFields({ form, data }: SportFieldProps) {
+	const { getFieldDecorator } = form;
 	return (
 		<>
 			<Form.Item label="Class grade">
