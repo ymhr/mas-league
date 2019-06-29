@@ -1,18 +1,17 @@
-import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import firebase, { firestore } from 'firebase/app';
 import { useDocument } from 'react-firebase-hooks/firestore';
 
 export function useDoc(collection: string, id: any) {
-	if (!collection || !id) [null, true, null];
 	const db = firebase.firestore();
-	let res;
+	let doc;
+
 	try {
-		const doc = db.collection(collection).doc(id);
-		res = useDocument(doc);
+		doc = db.collection(collection).doc(id);
 	} catch {
-		res = useDocument(null);
+		doc = null;
 	}
+	const res = useDocument(doc);
 
 	return res;
 }

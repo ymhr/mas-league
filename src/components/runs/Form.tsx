@@ -1,4 +1,4 @@
-import React, { FormEvent, ChangeEvent } from 'react';
+import React, { FormEvent } from 'react';
 import { Form, Input, DatePicker, Button, Select, message } from 'antd';
 import firebase, { firestore } from 'firebase/app';
 import useReactRouter from 'use-react-router';
@@ -10,7 +10,6 @@ import FlyballFields from '@/components/runs/sports/Flyball';
 import { FormComponentProps } from 'antd/lib/form';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import Loading from '@/components/Loading';
-import { string } from 'prop-types';
 
 const ExtraFields = posed.div({
 	enter: {
@@ -60,6 +59,28 @@ function RunForm({ form, doc, dog, run, onSave }: Props & FormComponentProps) {
 
 	const SpecificFields = sportSpecificFields[sport] || null;
 
+	let data = (!!doc && doc.data()) || {};
+	let dogData = dog.data();
+
+	const dogLeagues =
+		(dogData &&
+			Object.entries<{ sport: string; name: string }>(dogData.leagues)) ||
+		[];
+
+	React.useEffect(() => {
+		if (!data) return;
+
+		if (data.league) {
+			const selectedLeague = dogLeagues.find(
+				([leagueId]) => !!data && leagueId === data.league
+			);
+
+			if (selectedLeague && selectedLeague[1]) {
+				setSport(selectedLeague[1].sport);
+			}
+		}
+	}, [data, data.league, dogLeagues]);
+
 	function submit(e: FormEvent) {
 		if (!user) return;
 		e.preventDefault();
@@ -95,28 +116,7 @@ function RunForm({ form, doc, dog, run, onSave }: Props & FormComponentProps) {
 		});
 	}
 
-	let data = (!!doc && doc.data()) || {};
-	let dogData = dog.data();
-
 	if (!data || !dogData) return <Loading />;
-
-	const dogLeagues = Object.entries<{ sport: string; name: string }>(
-		dogData.leagues
-	);
-
-	React.useEffect(() => {
-		if (!data) return;
-
-		if (data.league) {
-			const selectedLeague = dogLeagues.find(
-				([leagueId]) => !!data && leagueId === data.league
-			);
-
-			if (selectedLeague && selectedLeague[1]) {
-				setSport(selectedLeague[1].sport);
-			}
-		}
-	}, [data, data.league, dogLeagues]);
 
 	function handleLeagueChange(e: string) {
 		const selectedLeague = dogLeagues.find(
