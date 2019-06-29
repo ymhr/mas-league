@@ -3,7 +3,6 @@ import { hot } from 'react-hot-loader';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
-import styled from 'styled-components';
 import Loading from '@/components/Loading';
 import AuthRoute from '@/components/AuthRoute';
 import AdminRoute from '@/components/AdminRoute';

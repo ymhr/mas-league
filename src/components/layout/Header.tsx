@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import LoginButton from '@/components/layout/LoginButton';
-import { Row, Col, Menu, Affix } from 'antd';
+import { Menu, Affix } from 'antd';
 import useRouter from 'use-react-router';
 import AdminButton from '@/components/layout/AdminButton';
 import Container from './Container';
@@ -13,8 +13,6 @@ const HeaderBar = styled.header`
 `;
 
 const H1 = styled.h1`
-	/* padding-top: 10px;
-	margin: 0 0 20px 0; */
 	margin: 0;
 	padding: 0;
 	font-family: 'Staatliches', cursive;
