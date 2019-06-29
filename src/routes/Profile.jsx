@@ -4,16 +4,16 @@ import { useProfile } from '@/hooks/firebase';
 import Loading from '@/components/Loading';
 import Error from '@/components/Error';
 
-function Profile({ history }) {
+function Profile() {
 	const data = useRef(null);
 
-	const { value, loading, error } = useProfile();
+	const { profile, loading, error } = useProfile();
 
 	if (error) return <Error error={error} />;
 
-	if (!data || loading || !value) return <Loading />;
+	if (loading || !profile) return <Loading />;
 
-	data.current = value.data() || {};
+	data.current = profile.data() || {};
 
 	return <ProfileForm />;
 }

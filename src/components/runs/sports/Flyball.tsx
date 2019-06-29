@@ -1,7 +1,9 @@
 import React from 'react';
 import { Form, Input } from 'antd';
+import { SportFieldProps } from '../Form';
 
-export default function FlyballFields({ form, getFieldDecorator, data }) {
+export default function FlyballFields({ form, data }: SportFieldProps) {
+	const { getFieldDecorator } = form;
 	return (
 		<>
 			<Form.Item label="Time">

@@ -5,9 +5,9 @@ import { Button, Form, Input, InputNumber, Icon } from 'antd';
 import firebase, { firestore } from 'firebase/app';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Loading from '@/components/Loading';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { History } from 'history';
 import { FormComponentProps } from 'antd/lib/form';
+import useRouter from 'use-react-router';
+import Error from '@/components/Error';
 
 const BoxPosed = posed.div({
 	open: {
@@ -110,32 +110,27 @@ const Overlay = styled(OverlayPosed)`
 `;
 
 interface DogProps {
-	dog: firestore.DocumentSnapshot;
+	dog?: firestore.QueryDocumentSnapshot;
+	newDoc?: firebase.firestore.DocumentReference;
 }
 
-function Dog({
-	dog,
-	form,
-	history
-}: DogProps & FormComponentProps & RouteComponentProps) {
+function Dog({ dog, newDoc, form }: DogProps & FormComponentProps) {
+	const isNew = !!newDoc;
+	const { history } = useRouter();
 	const { getFieldDecorator } = form;
 	const [isOpen, setIsOpen] = useState(false);
-	const [isNew, setIsNew] = useState(false);
 	const [user, initialising] = useAuthState(firebase.auth());
 
 	if (initialising || !user) return <Loading />;
-
-	let data: firestore.DocumentData = {};
-	if (!isNew) {
-		try {
-			const docData = dog.data();
-			if (docData) data = docData;
-		} catch (e) {
-			setIsNew(true);
-		}
+	if (!dog && !newDoc) {
+		return <Error error="exiting dog AND new dog missing" />;
 	}
 
-	// const { doc: dogDoc } = useDoc('dogs', dog.id);
+	let data: firestore.DocumentData = {};
+	if (!isNew && dog) {
+		const docData = dog.data();
+		if (docData) data = docData;
+	}
 
 	function close() {
 		setIsOpen(false);
@@ -149,10 +144,11 @@ function Dog({
 	function submit(e: FormEvent<HTMLElement>) {
 		e.preventDefault();
 		form.validateFields((err, values) => {
+			const id = (dog && dog.id) || (newDoc && newDoc.id);
 			const dogDoc = firebase
 				.firestore()
 				.collection('dogs')
-				.doc(dog.id);
+				.doc(id);
 
 			if (!err) {
 				if (isNew) {
@@ -166,6 +162,7 @@ function Dog({
 	}
 
 	function deleteDog(e: React.MouseEvent<HTMLElement, MouseEvent>) {
+		if (!dog) return;
 		const dogDoc = firebase
 			.firestore()
 			.collection('dogs')
@@ -176,6 +173,7 @@ function Dog({
 	}
 
 	function goToLogPoints(): void {
+		if (!dog) return;
 		history.push(`/points/${dog.id}`);
 	}
 
@@ -260,4 +258,4 @@ function Dog({
 	);
 }
 
-export default Form.create({ name: 'dog' })(withRouter(Dog));
+export default Form.create<DogProps & FormComponentProps>({ name: 'dog' })(Dog);

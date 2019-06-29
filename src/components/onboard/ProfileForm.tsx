@@ -1,23 +1,30 @@
-import React from 'react';
+import React, { FormEvent } from 'react';
 import { Form, Input, Row, Col, Button } from 'antd';
 import { useProfile } from '@/hooks/firebase';
 import Loading from '@/components/Loading';
+import { FormComponentProps } from 'antd/lib/form';
+import firebase from 'firebase/app';
 
-function ProfileForm({ form }) {
+function ProfileForm({ form }: FormComponentProps) {
 	const { getFieldDecorator, validateFields } = form;
-	const { loading, error, doc, value } = useProfile();
+	const { loading, error, profile } = useProfile();
 
 	if (error) {
 		return <p>An error occurred</p>;
 	}
 
-	if (loading || value === null) return <Loading />;
+	if (loading || !profile) return <Loading />;
 
-	function onSubmit(e) {
+	function onSubmit(e: FormEvent) {
+		if (!profile) return;
+		const doc = firebase
+			.firestore()
+			.collection('profiles')
+			.doc(profile.id);
 		e.preventDefault();
 		validateFields((err, values) => {
 			if (!err) {
-				if (value.data()) {
+				if (profile.data()) {
 					doc.update(values);
 				} else {
 					doc.set(values);
@@ -26,7 +33,7 @@ function ProfileForm({ form }) {
 		});
 	}
 
-	const data = value.data() || {};
+	const data = profile.data() || {};
 
 	return (
 		<>
@@ -56,19 +63,6 @@ function ProfileForm({ form }) {
 								initialValue: data.lastName
 							})(<Input />)}
 						</Form.Item>
-						{/* <Form.Item label="Email">
-							{getFieldDecorator('email', {
-								rules: [
-									{
-										required: true,
-										message:
-											'Please enter your email address',
-										pattern: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/gi
-									}
-								],
-								initialValue: data.lastName
-							})(<Input />)}
-						</Form.Item> */}
 						<Form.Item>
 							<Button block type="primary" htmlType="submit">
 								Submit

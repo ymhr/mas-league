@@ -7,9 +7,9 @@ export default function useIsAdmin() {
 	const [user, initialising] = useAuthState(firebase.auth());
 	const [isAdmin, setIsAdmin] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
-	const [hasError, setHasError] = useState(undefined);
+	const [hasError, setHasError] = useState<Error>();
 
-	const { error, loading, value } = useDoc('meta', 'admin');
+	const [value, loading, error] = useDoc('meta', 'admin');
 
 	//If we're done loading, and have not yet marked it as done, set it
 	if (!loading && !initialising && isLoading === true) {
@@ -25,10 +25,16 @@ export default function useIsAdmin() {
 	const response = { isAdmin, loading: isLoading, error: hasError };
 
 	//Exist early if we're loading, have an error, or have already determined that the user is an admin
-	if (error || loading || initialising || isAdmin || !user) return response;
+	if (error || loading || initialising || isAdmin || !user || !value)
+		return response;
 
 	//Is the user an admin?
-	const { adminUids } = value.data();
+	const data = value.data();
+	// const { adminUids } = value.data();
+
+	if (!data) return response;
+
+	const { adminUids } = data;
 
 	const userId = user.uid;
 

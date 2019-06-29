@@ -2,35 +2,36 @@ import React, { useState } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import Loading from '@/components/Loading';
 import Error from '@/components/Error';
-import firebase from 'firebase/app';
+import firebase, { firestore } from 'firebase/app';
 import { List, Button, Modal, Popconfirm } from 'antd';
 import Form from '@/components/runs/Form';
 import { useDoc } from '@/hooks/firebase';
-// import isDogInCurrentLeague from '@/utils/isDogInCurrentLeague';
+import useRouter from 'use-react-router';
 
-export default function LogPoints({ match }) {
+export default function LogPoints() {
+	const { match } = useRouter<{ dogId: string }>();
 	const { dogId } = match.params;
 
 	const [addModalOpen, setAddModelOpen] = useState(false);
-	const [editModalOpen, setEditModalOpen] = useState({});
+	const [editModalOpen, setEditModalOpen] = useState<{
+		[name: string]: boolean;
+	}>({});
 
-	const dog = useDoc('dogs', dogId);
+	const [dog, dogLoading, dogError] = useDoc('dogs', dogId);
 
 	const [value, loading, error] = useCollection(
 		firebase.firestore().collection(`dogs/${dogId}/runs`)
 	);
 
-	if (error || dog.error) return <Error error={error} />;
+	if (error || dogError) return <Error error={error} />;
 
-	if (loading || dog.loading) return <Loading />;
-
-	// const isInCurrentLeague = isDogInCurrentLeague(dog.value);
+	if (loading || dogLoading || !value || !dog) return <Loading />;
 
 	function openAddModal() {
 		setAddModelOpen(true);
 	}
 
-	function openEditModal(runId) {
+	function openEditModal(runId: string) {
 		setEditModalOpen({
 			[runId]: true
 		});
@@ -41,7 +42,7 @@ export default function LogPoints({ match }) {
 		setEditModalOpen({});
 	}
 
-	function deleteRun(run) {
+	function deleteRun(run: firestore.DocumentData) {
 		const document = firebase
 			.firestore()
 			.collection(`dogs/${dogId}/runs`)
