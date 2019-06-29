@@ -30,7 +30,7 @@ const { TextArea } = Input;
 function RunForm({ form, doc, dog, run, onSave }) {
 	const { getFieldDecorator } = form;
 	const { match } = useReactRouter();
-	const { user } = useAuthState(firebase.auth());
+	const [user] = useAuthState(firebase.auth());
 	const { dogId } = match.params;
 	const [loading, setLoading] = React.useState(false);
 	const [sport, setSport] = React.useState('');

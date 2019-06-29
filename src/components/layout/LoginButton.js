@@ -5,7 +5,7 @@ import firebase from 'firebase/app';
 import useReactRouter from 'use-react-router';
 
 export default function LoginButton() {
-	const { initialising, user } = useAuthState(firebase.auth());
+	const [user, initialising] = useAuthState(firebase.auth());
 	const { history } = useReactRouter();
 
 	function login() {

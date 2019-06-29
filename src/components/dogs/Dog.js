@@ -113,7 +113,7 @@ function Dog({ dog, form, history }) {
 	const { getFieldDecorator } = form;
 	const [isOpen, setIsOpen] = useState(false);
 	const [isNew, setIsNew] = useState(false);
-	const { initialising, user } = useAuthState(firebase.auth());
+	const [user, initialising] = useAuthState(firebase.auth());
 
 	if (initialising) return <Loading />;
 

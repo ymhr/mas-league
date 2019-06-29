@@ -19,7 +19,7 @@ const uiConfig = {
 };
 
 function Login({ history }) {
-	const { initialising, user } = useAuthState(firebase.auth());
+	const [user, initialising] = useAuthState(firebase.auth());
 
 	if (initialising) return <Loading />;
 

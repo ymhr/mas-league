@@ -5,7 +5,8 @@ module.exports = function({ env, paths }) {
 	return {
 		webpack: {
 			alias: {
-				'@': path.resolve(__dirname, 'src')
+				'@': path.resolve(__dirname, 'src'),
+				'react-dom': '@hot-loader/react-dom'
 			}
 		},
 		plugins: [{ plugin: reactHotReloadPlugin }]

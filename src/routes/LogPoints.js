@@ -16,13 +16,13 @@ export default function LogPoints({ match }) {
 
 	const dog = useDoc('dogs', dogId);
 
-	const runs = useCollection(
+	const [value, loading, error] = useCollection(
 		firebase.firestore().collection(`dogs/${dogId}/runs`)
 	);
 
-	if (runs.error || dog.error) return <Error error={runs.error} />;
+	if (error || dog.error) return <Error error={error} />;
 
-	if (runs.loading || dog.loading) return <Loading />;
+	if (loading || dog.loading) return <Loading />;
 
 	// const isInCurrentLeague = isDogInCurrentLeague(dog.value);
 
@@ -61,8 +61,8 @@ export default function LogPoints({ match }) {
 						Add
 					</Button>
 				}
-				dataSource={runs.value.docs}
-				renderItem={run => {
+				dataSource={value.docs}
+				renderItem={(run) => {
 					const data = run.data();
 					return (
 						<List.Item>

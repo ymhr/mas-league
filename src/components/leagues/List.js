@@ -7,7 +7,7 @@ import { Button, Modal } from 'antd';
 import Form from '@/components/leagues/Form';
 
 export default function List({ form, doc }) {
-	const { loading, error, value } = useCollection(
+	const [value, loading, error] = useCollection(
 		firebase.firestore().collection('leagues')
 	);
 	const [modalOpen, setModalOpen] = useState(false);
@@ -34,7 +34,7 @@ export default function List({ form, doc }) {
 			</Modal>
 			<br />
 			<br />
-			{value.docs.map(doc => (
+			{value.docs.map((doc) => (
 				<League doc={doc} key={doc.id} />
 			))}
 		</>

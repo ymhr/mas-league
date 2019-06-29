@@ -22,7 +22,7 @@ export default function List() {
 		.collection('dogs')
 		.where('uid', '==', firebase.auth().currentUser.uid)
 		.orderBy('name', 'asc');
-	const { error, loading, value } = useCollection(dogsRef);
+	const [value, loading, error] = useCollection(dogsRef);
 
 	const newDoc = db.collection('dogs').doc();
 
@@ -31,9 +31,12 @@ export default function List() {
 
 	return (
 		<>
-			<p>Once added here, your dog will not appear in the league tables until it has been approved. Please be patient.</p>
+			<p>
+				Once added here, your dog will not appear in the league tables
+				until it has been approved. Please be patient.
+			</p>
 			<ListContainer>
-				{value.docs.map(doc => {
+				{value.docs.map((doc) => {
 					return (
 						<ListItem key={doc.id}>
 							<Dog dog={doc} />

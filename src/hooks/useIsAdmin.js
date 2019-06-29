@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useDoc } from '@/hooks/firebase';
 
 export default function useIsAdmin() {
-	const { initialising, user } = useAuthState(firebase.auth());
+	const [user, initialising] = useAuthState(firebase.auth());
 	const [isAdmin, setIsAdmin] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 	const [hasError, setHasError] = useState(undefined);

@@ -23,7 +23,7 @@ function Dog({ doc, click }) {
 }
 
 export default function DogSelector({ leagueId, onSelect }) {
-	const { loading, value } = useCollection(
+	const [value, loading] = useCollection(
 		firebase.firestore().collection('dogs')
 	);
 
@@ -36,13 +36,13 @@ export default function DogSelector({ leagueId, onSelect }) {
 	//List all dogs who are not in the 2019 league
 	return value.docs
 		.filter(
-			doc =>
+			(doc) =>
 				doc &&
 				doc.data &&
 				doc.data() &&
 				(!doc.data().leagues || !doc.data().leagues[leagueId])
 		)
-		.map(doc => (
+		.map((doc) => (
 			<Dog key={doc.id} doc={doc} click={selected.bind(null, doc)} />
 		));
 }

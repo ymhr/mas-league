@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useCollection } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import firebase from 'firebase/app';
 
@@ -26,12 +25,6 @@ export function useDoc(collection, id) {
 	return { loading, doc, value };
 }
 
-export function useQuery(collection, ...rest) {
-	const db = firebase.firestore();
-	const query = db.collection(collection).where(...rest);
-	return useCollection(query);
-}
-
 function hasRequiredProfileData(value) {
 	//Make sure that we can get the data out of the value
 	const data = value && value.data && value.data();
@@ -46,7 +39,7 @@ function hasRequiredProfileData(value) {
 }
 
 export function useProfile() {
-	const { user } = useAuthState(firebase.auth());
+	const [user] = useAuthState(firebase.auth());
 	const profile = useDoc('profiles', user && user.uid);
 
 	return {

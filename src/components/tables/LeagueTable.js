@@ -14,12 +14,12 @@ export default function LeagueTable({ league, minGrade, maxGrade }) {
 		.orderBy(`leagues.${league}.grade`, 'desc');
 	// .orderBy(`leagues.${league}.points`, 'desc');
 
-	const competitors = useCollection(query);
+	const [value, loading, error] = useCollection(query);
 
-	if (competitors.loading) return <Loading />;
-	if (competitors.error) return <Error error={competitors.error} />;
+	if (loading) return <Loading />;
+	if (error) return <Error error={error} />;
 
-	let data = competitors.value.docs.map((doc) => ({
+	let data = value.docs.map((doc) => ({
 		...doc.data(),
 		key: doc.id,
 		grade: doc.data().leagues[league].grade,
