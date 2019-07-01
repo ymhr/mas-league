@@ -11,6 +11,13 @@ interface Props {
 	maxGrade: number;
 }
 
+interface DogData {
+	[prop: string]: any;
+	key: string;
+	grade: string;
+	points: number;
+}
+
 export default function LeagueTable({ league, minGrade, maxGrade }: Props) {
 	const query = firebase
 		.firestore()
@@ -18,19 +25,24 @@ export default function LeagueTable({ league, minGrade, maxGrade }: Props) {
 		.where(`leagues.${league}.grade`, '>=', minGrade)
 		.where(`leagues.${league}.grade`, '<=', maxGrade)
 		.orderBy(`leagues.${league}.grade`, 'desc');
-	// .orderBy(`leagues.${league}.points`, 'desc');
 
 	const [value, loading, error] = useCollection(query);
 
 	if (loading || !value) return <Loading />;
 	if (error) return <Error error={error} />;
 
-	let data = value.docs.map((doc) => ({
-		...doc.data(),
-		key: doc.id,
-		grade: doc.data().leagues[league].grade,
-		points: doc.data().leagues[league].points
-	}));
+	let data = value.docs
+		.map((doc): DogData | null => {
+			const data = doc.data();
+			if (!data.leagues[league]) return null;
+			return {
+				...doc.data(),
+				key: doc.id,
+				grade: data.leagues[league].grade,
+				points: data.leagues[league].points
+			};
+		})
+		.filter((dog): dog is DogData => !!dog);
 
 	/*
 		There is a significant limitation to firestore, where if you query with a `where`, the first orderBy MUST be the same column as that where.
@@ -41,10 +53,10 @@ export default function LeagueTable({ league, minGrade, maxGrade }: Props) {
 		return a.points > b.points ? -1 : 1;
 	});
 
-	const scores = data.map((doc) => doc.points);
+	const scores = data.map(doc => doc.points);
 
-	data = data.map((doc) => {
-		const place = scores.findIndex((score) => score === doc.points) + 1;
+	data = data.map(doc => {
+		const place = scores.findIndex(score => score === doc.points) + 1;
 		return { ...doc, place };
 	});
 
