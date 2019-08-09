@@ -69,7 +69,9 @@ function SportNav() {
 				const data = doc.data();
 				return (
 					<Menu.Item key={`/leagues/${doc.id}`}>
-						<Link to={`/leagues/${doc.id}`}>{data.name}</Link>
+						<Link to={`/leagues/${doc.id}`}>
+							{data.name} ({data.sport})
+						</Link>
 					</Menu.Item>
 				);
 			})}
