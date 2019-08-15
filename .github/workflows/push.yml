@@ -1,0 +1,36 @@
+on: push
+name: Deploy to Firebase
+jobs:
+  isMaster:
+    name: Is master
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Is master
+      uses: actions/bin/filter@b2bea0749eed6beb495a8fa194c071847af60ea1
+      with:
+        args: branch master
+    - name: Build
+      uses: borales/actions-yarn@master
+      env:
+        NODE_PATH: src
+      with:
+        args: build
+    - name: Install
+      uses: borales/actions-yarn@master
+      with:
+        args: install
+    - name: Deploy
+      uses: w9jds/firebase-action@master
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        PROJECT_ID: mas-league
+      with:
+        args: deploy --project mas-league --only hosting
+    - name: Telegram Deployment
+      uses: appleboy/telegram-action@master
+      env:
+        TELEGRAM_TO: ${{ secrets.TELEGRAM_TO }}
+        TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+      with:
+        args: A new version has been deployed
